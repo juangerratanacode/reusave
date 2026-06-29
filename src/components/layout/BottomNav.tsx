@@ -5,7 +5,7 @@ import { Home, Plus, Heart, User } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const links = [
-  { href: '/', icon: Home, label: 'Inicio' },
+  { href: '/feed', icon: Home, label: 'Inicio' },
   { href: '/listings/new', icon: Plus, label: 'Publicar', highlight: true },
   { href: '/favorites', icon: Heart, label: 'Guardados' },
   { href: '/profile', icon: User, label: 'Perfil' },
@@ -15,7 +15,7 @@ export default function BottomNav() {
   const path = usePathname()
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 bg-[#0f0f0f]/95 backdrop-blur border-t border-[#2a2a2a] safe-area-pb">
-      <div className="max-w-2xl mx-auto flex">
+      <div className="max-w-7xl mx-auto flex">
         {links.map(({ href, icon: Icon, label, highlight }) => (
           <Link
             key={href}

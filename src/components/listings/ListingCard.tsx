@@ -4,6 +4,7 @@ import { Listing } from '@/types'
 import { formatPrice, timeAgo } from '@/lib/utils'
 import { cn } from '@/lib/utils'
 import { MapPin } from 'lucide-react'
+import FavoriteButton from './FavoriteButton'
 
 export default function ListingCard({ listing }: { listing: Listing }) {
   const cover = listing.listing_images?.find((i) => i.is_cover) ?? listing.listing_images?.[0]
@@ -37,7 +38,13 @@ export default function ListingCard({ listing }: { listing: Listing }) {
           ) : (
             <div className="w-full h-full flex items-center justify-center text-4xl">📦</div>
           )}
-          {listing.is_urgent && (
+          <FavoriteButton listingId={listing.id} />
+          {listing.status === 'sold' && (
+            <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+              <span className="bg-white text-black text-xs font-black px-3 py-1 rounded-full uppercase tracking-wide">Vendido</span>
+            </div>
+          )}
+          {listing.is_urgent && listing.status !== 'sold' && (
             <span className="absolute top-2 left-2 bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">
               URGENTE
             </span>

@@ -1,95 +1,74 @@
-# ReUsa.ve — MVP Setup
+# ReUsa.ve
 
-Marketplace de segunda mano para Venezuela. PWA mobile-first con Next.js 14 + Supabase.
+Marketplace de segunda mano para Venezuela. Nació como respuesta al sismo de 2025 — un lugar donde la gente pueda donar lo que no usa, vender a precios solidarios y encontrar lo que necesita sin comisiones ni intermediarios.
+
+Está hecho con Next.js 14, Supabase y Tailwind. Mobile-first, funciona como PWA.
 
 ---
 
-## 1. Instalar dependencias
+## Correr el proyecto
 
 ```bash
 npm install
-```
-
-## 2. Configurar Supabase
-
-1. Crea un proyecto en [supabase.com](https://supabase.com) (gratis)
-2. Ve a **SQL Editor** y ejecuta todo el contenido de `supabase_schema.sql`
-3. En **Authentication > Providers**, activa:
-   - **Email** (Magic Link) ✅
-   - **Google** (necesitas Client ID y Secret de Google Cloud Console)
-
-## 3. Variables de entorno
-
-Copia `.env.local.example` a `.env.local` y completa:
-
-```bash
-cp .env.local.example .env.local
-```
-
-Obtén los valores en tu proyecto Supabase: **Settings > API**
-
-```
-NEXT_PUBLIC_SUPABASE_URL=https://TU_PROJECT_ID.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=TU_ANON_KEY
-```
-
-## 4. ⚠️ IMPORTANTE: Renombrar carpeta de ruta dinámica
-
-Next.js usa corchetes para rutas dinámicas. Después de clonar, renombra:
-
-```bash
-mv src/app/listings/id src/app/listings/[id]
-```
-
-## 5. Correr en desarrollo
-
-```bash
 npm run dev
 ```
 
 Abre [http://localhost:3000](http://localhost:3000)
 
-## 6. Deploy en Vercel
+---
+
+## Configuración
+
+### Variables de entorno
+
+Copia el archivo de ejemplo y completa con los datos de tu proyecto Supabase:
 
 ```bash
-npm install -g vercel
-vercel
+cp .env.local.example .env.local
 ```
 
-Agrega las variables de entorno en el dashboard de Vercel.
+```
+NEXT_PUBLIC_SUPABASE_URL=https://TU_PROJECT_ID.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=TU_ANON_KEY
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```
+
+Los valores los encuentras en tu proyecto Supabase → **Settings → API**.
+
+### Base de datos
+
+Ejecuta el schema en el SQL Editor de Supabase:
+
+```
+supabase_schema.sql
+```
+
+### Autenticación
+
+En Supabase → **Authentication → Emails → SMTP Settings**, configura Resend (o cualquier proveedor SMTP) para que los códigos OTP lleguen bien y no vayan a spam.
+
+En **Authentication → URL Configuration**:
+- Site URL: `http://localhost:3000`
+- Redirect URLs: `http://localhost:3000/auth/callback`
+
+### Storage
+
+Crea dos buckets en Supabase → **Storage**:
+- `listing-images` (público)
+- `avatars` (público)
 
 ---
 
-## Estructura del proyecto
+## Deploy
 
-```
-src/
-├── app/
-│   ├── page.tsx              # Home feed
-│   ├── auth/login/           # Login (Magic Link + Google)
-│   ├── listings/
-│   │   ├── new/              # Crear publicación
-│   │   └── [id]/             # Detalle de publicación
-│   ├── profile/              # Perfil del usuario
-│   └── api/auth/signout/     # Endpoint de logout
-├── components/
-│   ├── layout/               # Navbar, BottomNav
-│   └── listings/             # ListingCard, CategoryFilter
-├── lib/
-│   ├── supabase.ts           # Cliente browser
-│   ├── supabase-server.ts    # Cliente servidor
-│   ├── utils.ts              # Helpers
-│   └── image-compress.ts     # Compresión en cliente
-└── types/index.ts            # TypeScript types
-```
+El proyecto está listo para Vercel. Conecta el repositorio, agrega las variables de entorno y listo. El dominio de producción va en `NEXT_PUBLIC_SITE_URL`.
 
 ---
 
-## Próximas funcionalidades (Fase 2)
+## Lo que viene
 
-- [ ] Búsqueda por radio de distancia (PostGIS ya está configurado)
-- [ ] Chat interno (tabla `conversations` ya existe en DB)
-- [ ] Sistema de valoraciones (tabla `ratings` ya existe en DB)
-- [ ] Favoritos / guardados
-- [ ] Moderación de contenido
-- [ ] Notificaciones push (PWA)
+- Chat entre usuarios
+- Notificaciones push
+- Búsqueda por ubicación (PostGIS)
+- Valoraciones de vendedores
+- App en Play Store y App Store vía PWA

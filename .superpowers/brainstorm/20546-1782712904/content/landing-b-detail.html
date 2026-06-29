@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>ReUsa.ve — Diseño B (mockup completo)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #111; color: #f0f0f0; font-family: system-ui, -apple-system, sans-serif; padding: 20px; }
+  .wrapper { display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap; }
+  .phone-frame {
+    width: 375px;
+    min-width: 320px;
+    background: #0f0f0f;
+    border-radius: 32px;
+    border: 2px solid #2a2a2a;
+    overflow: hidden;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+    flex-shrink: 0;
+  }
+  .phone-bar {
+    background: #0f0f0f;
+    height: 12px;
+    border-bottom: 1px solid #1a1a1a;
+  }
+  .phone-body { padding: 0; overflow-y: auto; max-height: 720px; }
+
+  /* Landing B styles */
+  .nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 20px;
+    border-bottom: 1px solid #1a1a1a;
+    position: sticky; top: 0; background: rgba(15,15,15,0.95);
+    backdrop-filter: blur(8px); z-index: 10;
+  }
+  .logo { font-size: 20px; font-weight: 900; color: #22c55e; }
+  .logo span { color: #4b5563; }
+  .nav-actions { display: flex; gap: 8px; align-items: center; }
+  .btn-ghost { font-size: 13px; color: #9ca3af; padding: 6px 12px; border-radius: 20px; cursor: pointer; }
+  .btn-green { font-size: 13px; font-weight: 700; color: #000; background: #22c55e; padding: 7px 16px; border-radius: 20px; cursor: pointer; }
+
+  .section { padding: 24px 20px; }
+
+  .badge-sos {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(127,29,29,0.25); border: 1px solid rgba(127,29,29,0.5);
+    border-radius: 999px; padding: 6px 14px;
+    font-size: 12px; color: #fca5a5; margin-bottom: 18px;
+  }
+
+  .hero-title {
+    font-size: 34px; font-weight: 900; line-height: 1.1; margin-bottom: 14px;
+  }
+  .hero-title .green { color: #22c55e; }
+
+  .hero-sub { font-size: 14px; color: #9ca3af; line-height: 1.6; margin-bottom: 22px; }
+
+  .cta-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+  .cta-primary {
+    background: #22c55e; color: #000; font-size: 15px; font-weight: 800;
+    padding: 15px; border-radius: 16px; text-align: center;
+    box-shadow: 0 0 24px rgba(34,197,94,0.25);
+  }
+  .cta-secondary {
+    background: #1a1a1a; border: 1px solid #2a2a2a;
+    color: #d1d5db; font-size: 15px; font-weight: 500;
+    padding: 15px; border-radius: 16px; text-align: center;
+  }
+  .trust-line { font-size: 11px; color: #4b5563; text-align: center; }
+
+  .divider { height: 1px; background: #1a1a1a; margin: 0 20px; }
+
+  .stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 0; }
+  .stat-card { background: #1a1a1a; border-radius: 14px; padding: 14px 10px; text-align: center; }
+  .stat-num { font-size: 22px; font-weight: 900; margin-bottom: 2px; }
+  .stat-label { font-size: 10px; color: #6b7280; line-height: 1.3; }
+
+  .section-title { font-size: 16px; font-weight: 800; margin-bottom: 14px; color: #f0f0f0; }
+  .section-sub { font-size: 12px; color: #6b7280; margin-top: -10px; margin-bottom: 14px; }
+
+  .steps { display: flex; flex-direction: column; gap: 10px; }
+  .step { display: flex; align-items: center; gap: 14px; background: #1a1a1a; border-radius: 14px; padding: 14px; }
+  .step-icon { font-size: 26px; width: 44px; text-align: center; flex-shrink: 0; }
+  .step-title { font-size: 13px; font-weight: 700; color: #f0f0f0; margin-bottom: 2px; }
+  .step-desc { font-size: 11px; color: #9ca3af; line-height: 1.4; }
+
+  .cats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .cat-card { border-radius: 14px; padding: 14px; border: 1px solid; }
+  .cat-card .cat-icon { font-size: 26px; margin-bottom: 8px; }
+  .cat-card .cat-name { font-size: 13px; font-weight: 700; color: #f0f0f0; margin-bottom: 2px; }
+  .cat-card .cat-desc { font-size: 11px; color: #9ca3af; }
+
+  .features { display: flex; flex-direction: column; gap: 10px; }
+  .feature { display: flex; gap: 14px; align-items: flex-start; background: #1a1a1a; border-radius: 14px; padding: 14px; }
+  .feature-dot { width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 16px; }
+  .feature-title { font-size: 13px; font-weight: 700; color: #f0f0f0; margin-bottom: 2px; }
+  .feature-desc { font-size: 11px; color: #9ca3af; line-height: 1.4; }
+
+  .cta-final { text-align: center; padding: 28px 20px; background: #0a0a0a; border-top: 1px solid #1a1a1a; }
+  .cta-final h2 { font-size: 22px; font-weight: 900; margin-bottom: 6px; }
+  .cta-final p { font-size: 12px; color: #6b7280; margin-bottom: 18px; }
+  .cta-final-btn { display: inline-flex; align-items: center; gap: 8px; background: #22c55e; color: #000; font-size: 14px; font-weight: 800; padding: 14px 28px; border-radius: 16px; box-shadow: 0 0 24px rgba(34,197,94,0.2); }
+
+  .footer { text-align: center; padding: 16px; font-size: 10px; color: #374151; border-top: 1px solid #1a1a1a; }
+
+  /* Notes panel */
+  .notes { flex: 1; min-width: 260px; }
+  .notes h2 { font-size: 18px; font-weight: 800; margin-bottom: 16px; color: #f0f0f0; }
+  .note-block { background: #1a1a1a; border-radius: 12px; padding: 14px; margin-bottom: 12px; border-left: 3px solid #22c55e; }
+  .note-block.orange { border-color: #f97316; }
+  .note-block.blue { border-color: #60a5fa; }
+  .note-title { font-size: 12px; font-weight: 700; color: #f0f0f0; margin-bottom: 4px; }
+  .note-text { font-size: 11px; color: #9ca3af; line-height: 1.5; }
+
+  .flow-box { background: #1a1a1a; border-radius: 12px; padding: 14px; margin-bottom: 12px; }
+  .flow-box h3 { font-size: 12px; font-weight: 700; color: #f0f0f0; margin-bottom: 10px; }
+  .flow-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 11px; color: #9ca3af; }
+  .flow-pill { background: #374151; border-radius: 6px; padding: 3px 8px; font-size: 10px; font-weight: 600; color: #d1d5db; white-space: nowrap; }
+  .flow-arrow { color: #22c55e; font-weight: 700; }
+  .flow-dest { color: #d1d5db; font-size: 10px; }
+</style>
+</head>
+<body>
+<div style="text-align:center;margin-bottom:20px">
+  <h1 style="font-size:22px;font-weight:900;color:#f0f0f0;margin-bottom:6px">ReUsa.ve — Diseño B (Hero + CTA)</h1>
+  <p style="font-size:13px;color:#6b7280">Mockup completo de la landing para MVP</p>
+</div>
+
+<div class="wrapper">
+
+  <!-- Phone mockup -->
+  <div class="phone-frame">
+    <div class="phone-bar"></div>
+    <div class="phone-body">
+
+      <!-- Navbar -->
+      <div class="nav">
+        <div class="logo">ReUsa<span>.ve</span></div>
+        <div class="nav-actions">
+          <div class="btn-ghost">Entrar</div>
+          <div class="btn-green">Registrarse</div>
+        </div>
+      </div>
+
+      <!-- Hero section -->
+      <div class="section">
+        <div class="badge-sos">🆘 Apoyo post-sismo Venezuela</div>
+        <h1 class="hero-title">
+          Lo que no usas,<br>
+          <span class="green">alguien lo necesita</span>
+        </h1>
+        <p class="hero-sub">
+          Marketplace de segunda mano para venezolanos. Vende, dona o encuentra lo que perdiste — a precios reales, sin intermediarios.
+        </p>
+        <div class="cta-group">
+          <div class="cta-primary">Publicar gratis →</div>
+          <div class="cta-secondary">Explorar artículos</div>
+        </div>
+        <p class="trust-line">Sin costo · Contacto por WhatsApp · Pago en mano</p>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Stats -->
+      <div class="section">
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-num" style="color:#22c55e">24</div>
+            <div class="stat-label">estados de Venezuela</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" style="color:#f97316">$0</div>
+            <div class="stat-label">costo para publicar</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" style="color:#60a5fa">WA</div>
+            <div class="stat-label">contacto directo</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Cómo funciona -->
+      <div class="section">
+        <p class="section-title">¿Cómo funciona?</p>
+        <div class="steps">
+          <div class="step">
+            <div class="step-icon">📸</div>
+            <div>
+              <p class="step-title">Publica en segundos</p>
+              <p class="step-desc">Sube fotos, describe el artículo y pon tu precio. Gratis, siempre.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-icon">🔍</div>
+            <div>
+              <p class="step-title">Encuentra cerca de ti</p>
+              <p class="step-desc">Busca por categoría o filtra por estado y ciudad.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-icon">💬</div>
+            <div>
+              <p class="step-title">Conecta por WhatsApp</p>
+              <p class="step-desc">Sin chat interno. El vendedor y comprador hablan directo.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Categorías emergencia -->
+      <div class="section" style="background:#0a0a0a">
+        <p class="section-title">Para la emergencia</p>
+        <p class="section-sub">Categorías especiales para el momento que vivimos</p>
+        <div class="cats-grid">
+          <div class="cat-card" style="background:rgba(34,197,94,0.08);border-color:rgba(34,197,94,0.2)">
+            <div class="cat-icon">🎁</div>
+            <p class="cat-name">Donación</p>
+            <p class="cat-desc">Regala lo que no usas</p>
+          </div>
+          <div class="cat-card" style="background:rgba(249,115,22,0.08);border-color:rgba(249,115,22,0.2)">
+            <div class="cat-icon">🤝</div>
+            <p class="cat-name">Venta Solidaria</p>
+            <p class="cat-desc">A precios de verdad</p>
+          </div>
+          <div class="cat-card" style="background:rgba(239,68,68,0.08);border-color:rgba(239,68,68,0.2)">
+            <div class="cat-icon">🆘</div>
+            <p class="cat-name">Necesidad Urgente</p>
+            <p class="cat-desc">Publica lo que buscas</p>
+          </div>
+          <div class="cat-card" style="background:rgba(168,85,247,0.08);border-color:rgba(168,85,247,0.2)">
+            <div class="cat-icon">🔍</div>
+            <p class="cat-name">Objetos Perdidos</p>
+            <p class="cat-desc">Encontrados o extraviados</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Features -->
+      <div class="section">
+        <p class="section-title">Hecho para Venezuela</p>
+        <div class="features">
+          <div class="feature">
+            <div class="feature-dot" style="background:rgba(34,197,94,0.15)">⚡</div>
+            <div>
+              <p class="feature-title">Rápido con internet lento</p>
+              <p class="feature-desc">Imágenes comprimidas. Carga bien con datos móviles.</p>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="feature-dot" style="background:rgba(249,115,22,0.15)">📍</div>
+            <div>
+              <p class="feature-title">Por estado y ciudad</p>
+              <p class="feature-desc">Filtra por los 24 estados. Encuentra lo que hay cerca.</p>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="feature-dot" style="background:rgba(96,165,250,0.15)">🛡️</div>
+            <div>
+              <p class="feature-title">Sin pagos en línea</p>
+              <p class="feature-desc">Pago en mano. Tú decides. Sin riesgo de transferencias.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA final -->
+      <div class="cta-final">
+        <h2>Empieza ahora</h2>
+        <p>Gratis. Siempre.</p>
+        <div class="cta-final-btn">Crear cuenta gratis →</div>
+      </div>
+
+      <div class="footer">ReUsa.ve — Hecho con ❤️ para Venezuela</div>
+
+    </div>
+  </div>
+
+  <!-- Notes panel -->
+  <div class="notes">
+    <h2>Diseño + flujo de navegación</h2>
+
+    <div class="flow-box">
+      <h3>Routing según sesión</h3>
+      <div class="flow-row">
+        <div class="flow-pill">/ (raíz)</div>
+        <span class="flow-arrow">→</span>
+        <span class="flow-dest">Detecta sesión en servidor</span>
+      </div>
+      <div class="flow-row" style="padding-left:16px">
+        <div class="flow-pill" style="background:#052e16;color:#86efac">Con sesión</div>
+        <span class="flow-arrow">→</span>
+        <span class="flow-dest">/feed (marketplace)</span>
+      </div>
+      <div class="flow-row" style="padding-left:16px">
+        <div class="flow-pill" style="background:#1c1917;color:#a8a29e">Sin sesión</div>
+        <span class="flow-arrow">→</span>
+        <span class="flow-dest">Landing (esta página)</span>
+      </div>
+      <div class="flow-row" style="margin-top:8px">
+        <div class="flow-pill">/feed</div>
+        <span class="flow-arrow">→</span>
+        <span class="flow-dest">Feed actual (lo que ya existe en page.tsx)</span>
+      </div>
+    </div>
+
+    <div class="note-block">
+      <p class="note-title">Sección Hero</p>
+      <p class="note-text">Badge de emergencia + titular de impacto + descripción corta + 2 CTAs (Publicar gratis y Explorar artículos) + línea de confianza. El verde del botón primario ya está en la paleta.</p>
+    </div>
+
+    <div class="note-block orange">
+      <p class="note-title">Estadísticas de confianza</p>
+      <p class="note-text">3 cards: "24 estados", "$0 costo", "WhatsApp". Construyen credibilidad aunque el marketplace esté vacío al inicio.</p>
+    </div>
+
+    <div class="note-block blue">
+      <p class="note-title">Cómo funciona + Categorías + Features</p>
+      <p class="note-text">3 secciones de educación al usuario. La de categorías reutiliza la paleta de colores ya definida en Tailwind (green/orange/red/purple).</p>
+    </div>
+
+    <div style="background:#1a1a1a;border-radius:12px;padding:14px">
+      <p style="font-size:12px;font-weight:700;color:#f0f0f0;margin-bottom:8px">Cambios en el código</p>
+      <ul style="font-size:11px;color:#9ca3af;line-height:1.8;padding-left:14px">
+        <li>page.tsx → detección de sesión + redirect</li>
+        <li>landing/page.tsx → reemplazar con este diseño B</li>
+        <li>/feed → mover el marketplace actual aquí</li>
+        <li>Navbar/BottomNav → solo aparecen en /feed</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

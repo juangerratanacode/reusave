@@ -5,6 +5,8 @@ import { CONDITIONS, Listing } from '@/types'
 import { MapPin, Clock, Eye, ArrowLeft, CheckCircle } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
+import BackButton from '@/components/layout/BackButton'
+import ReportButton from '@/components/listings/ReportButton'
 
 // NOTA: Renombra esta carpeta de /id a /[id] después de copiarla
 // Next.js usa corchetes para rutas dinámicas: src/app/listings/[id]/page.tsx
@@ -44,9 +46,7 @@ export default async function ListingDetailPage({ params }: { params: { id: stri
     <div className="min-h-screen bg-[#0f0f0f]">
       {/* Header */}
       <header className="sticky top-0 z-10 bg-[#0f0f0f]/95 backdrop-blur border-b border-[#2a2a2a] px-4 h-14 flex items-center gap-3">
-        <Link href="/" className="text-gray-400 hover:text-white">
-          <ArrowLeft className="w-5 h-5" />
-        </Link>
+        <BackButton />
         <h1 className="font-semibold text-gray-100 truncate">{listing.title}</h1>
       </header>
 
@@ -154,6 +154,8 @@ export default async function ListingDetailPage({ params }: { params: { id: stri
               </div>
             </div>
           )}
+
+          <ReportButton listingId={listing.id} />
         </div>
       </main>
 
