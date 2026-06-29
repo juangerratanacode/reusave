@@ -2,7 +2,7 @@
 
 Marketplace de segunda mano para Venezuela. Nació como respuesta al sismo de 2026 — un lugar donde la gente pueda donar lo que no usa, vender a precios solidarios y encontrar lo que necesita sin comisiones ni intermediarios.
 
-Está hecho con Next.js 14, Supabase y Tailwind. Mobile-first, funciona como PWA.
+Hecho con Next.js 14, Supabase y Tailwind. Mobile-first, funciona como PWA.
 
 ---
 
@@ -19,49 +19,15 @@ Abre [http://localhost:3000](http://localhost:3000)
 
 ## Configuración
 
-### Variables de entorno
+Copia `.env.local.example` a `.env.local` y completa con los datos de tu proyecto. Nunca subas ese archivo al repositorio.
 
-Copia el archivo de ejemplo y completa con los datos de tu proyecto Supabase:
-
-```bash
-cp .env.local.example .env.local
-```
-
-```
-NEXT_PUBLIC_SUPABASE_URL=https://TU_PROJECT_ID.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=TU_ANON_KEY
-NEXT_PUBLIC_SITE_URL=http://localhost:3000
-```
-
-Los valores los encuentras en tu proyecto Supabase → **Settings → API**.
-
-### Base de datos
-
-Ejecuta el schema en el SQL Editor de Supabase:
-
-```
-supabase_schema.sql
-```
-
-### Autenticación
-
-En Supabase → **Authentication → Emails → SMTP Settings**, configura Resend (o cualquier proveedor SMTP) para que los códigos OTP lleguen bien y no vayan a spam.
-
-En **Authentication → URL Configuration**:
-- Site URL: `http://localhost:3000`
-- Redirect URLs: `http://localhost:3000/auth/callback`
-
-### Storage
-
-Crea dos buckets en Supabase → **Storage**:
-- `listing-images` (público)
-- `avatars` (público)
+Las instrucciones completas de configuración (Supabase, SMTP, Storage, variables) están en [`docs/setup.md`](docs/setup.md).
 
 ---
 
 ## Deploy
 
-El proyecto está listo para Vercel. Conecta el repositorio, agrega las variables de entorno y listo. El dominio de producción va en `NEXT_PUBLIC_SITE_URL`.
+El proyecto está listo para Vercel. Conecta el repositorio y agrega las variables de entorno desde el dashboard de Vercel — nunca en el código.
 
 ---
 
@@ -69,6 +35,6 @@ El proyecto está listo para Vercel. Conecta el repositorio, agrega las variable
 
 - Chat entre usuarios
 - Notificaciones push
-- Búsqueda por ubicación (PostGIS)
+- Búsqueda por ubicación
 - Valoraciones de vendedores
 - App en Play Store y App Store vía PWA
