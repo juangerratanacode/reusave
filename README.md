@@ -1,6 +1,6 @@
 # ReUsa.ve
 
-Marketplace de segunda mano para Venezuela. Nació como respuesta al sismo de 2025 — un lugar donde la gente pueda donar lo que no usa, vender a precios solidarios y encontrar lo que necesita sin comisiones ni intermediarios.
+Marketplace de segunda mano para Venezuela. Nació como respuesta al sismo de 2026 — un lugar donde la gente pueda donar lo que no usa, vender a precios solidarios y encontrar lo que necesita sin comisiones ni intermediarios.
 
 Está hecho con Next.js 14, Supabase y Tailwind. Mobile-first, funciona como PWA.
 
