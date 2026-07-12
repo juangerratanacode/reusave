@@ -6,9 +6,9 @@ import { cn } from '@/lib/utils'
 import { MapPin } from 'lucide-react'
 import FavoriteButton from './FavoriteButton'
 
-const VERDE = '#22A45D'
-const CORAL = '#EF4D28'
-const TINTA = '#0F1B13'
+const VERDE = '#0FA46A'
+const CORAL = '#FF5A38'
+const TINTA = '#15221B'
 
 export default function ListingCard({ listing }: { listing: Listing }) {
   const cover = listing.listing_images?.find((i) => i.is_cover) ?? listing.listing_images?.[0]
@@ -26,7 +26,7 @@ export default function ListingCard({ listing }: { listing: Listing }) {
       <article
         className={cn(
           'bg-white rounded-xl overflow-hidden border hover:shadow-md transition-all active:scale-95',
-          listing.is_urgent ? 'border-[#EF4D28]/40' : 'border-black/8'
+          listing.is_urgent ? 'border-[#FF5A38]/40' : 'border-black/8'
         )}
       >
         <div className="relative aspect-square bg-[#F5F2ED]">
@@ -38,11 +38,11 @@ export default function ListingCard({ listing }: { listing: Listing }) {
           <FavoriteButton listingId={listing.id} />
           {listing.status === 'sold' && (
             <div className="absolute inset-0 bg-white/70 flex items-center justify-center">
-              <span className="bg-[#0F1B13] text-white text-xs font-black px-3 py-1 rounded-full uppercase tracking-wide">Vendido</span>
+              <span className="bg-[#15221B] text-white text-xs font-black px-3 py-1 rounded-full uppercase tracking-wide">Vendido</span>
             </div>
           )}
           {listing.is_urgent && listing.status !== 'sold' && (
-            <span className="absolute top-2 left-2 bg-[#EF4D28] text-white text-[10px] font-bold px-1.5 py-0.5 rounded">URGENTE</span>
+            <span className="absolute top-2 left-2 bg-[#FF5A38] text-white text-[10px] font-bold px-1.5 py-0.5 rounded">URGENTE</span>
           )}
         </div>
         <div className="p-2.5">
@@ -52,7 +52,16 @@ export default function ListingCard({ listing }: { listing: Listing }) {
             </span>
           )}
           <h3 className="text-sm font-medium mt-1.5 line-clamp-2 leading-snug" style={{ color: TINTA }}>{listing.title}</h3>
-          <p className="text-base font-bold mt-1" style={{ color: VERDE }}>{formatPrice(listing.price)}</p>
+          {(listing as any).listing_type === 'exchange' ? (
+            <p className="text-sm font-bold mt-1" style={{ color: '#7C3AED' }}>💱 Intercambio</p>
+          ) : (listing as any).listing_type === 'both' ? (
+            <div className="mt-1">
+              <p className="text-base font-bold" style={{ color: VERDE }}>{formatPrice(listing.price)}</p>
+              <p className="text-[11px]" style={{ color: '#7C3AED' }}>💱 o intercambio</p>
+            </div>
+          ) : (
+            <p className="text-base font-bold mt-1" style={{ color: VERDE }}>{formatPrice(listing.price)}</p>
+          )}
           {listing.city && (
             <p className="text-[11px] mt-1 flex items-center gap-0.5" style={{ color: '#9CA3AF' }}>
               <MapPin className="w-3 h-3" /> {listing.city}

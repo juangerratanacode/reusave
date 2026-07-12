@@ -60,15 +60,15 @@ export default async function FeedPage({
   const hasFilters = searchParams.state || searchParams.category || searchParams.q
 
   return (
-    <div className="min-h-screen bg-[#F0EDE6]">
+    <div className="min-h-screen bg-[#F5F0E5]">
       <Navbar />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 pt-16 pb-24">
 
         {/* Banner emergencia */}
         <div className="bg-[#FFF5F2] border border-[#FBBFAA] rounded-2xl px-4 py-3 mb-5 mt-4 flex items-center gap-3">
-          <span className="w-2 h-2 rounded-full bg-[#EF4D28] animate-pulse shrink-0" />
-          <p className="text-sm font-medium" style={{ color: '#0F1B13' }}>
+          <span className="w-2 h-2 rounded-full bg-[#FF5A38] animate-pulse shrink-0" />
+          <p className="text-sm font-medium" style={{ color: '#15221B' }}>
             <strong>Apoyo post-sismo Venezuela</strong> — Comparte lo que no usas. Encuentra lo que necesitas.
           </p>
         </div>
@@ -99,7 +99,7 @@ export default async function FeedPage({
               <div className="w-16 h-16 rounded-2xl bg-white border border-black/8 flex items-center justify-center mb-4">
                 <svg className="w-8 h-8" style={{ color: '#B0A89E' }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
               </div>
-              <p className="font-semibold" style={{ color: '#0F1B13' }}>No hay publicaciones aún</p>
+              <p className="font-semibold" style={{ color: '#15221B' }}>No hay publicaciones aún</p>
               <p className="text-sm mt-1" style={{ color: '#6B7280' }}>¡Sé el primero en publicar!</p>
             </div>
           )}

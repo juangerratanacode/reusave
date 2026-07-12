@@ -31,7 +31,7 @@ export default async function ProfilePage() {
     .charAt(0).toUpperCase()
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#F0EDE6' }}>
+    <div className="min-h-screen" style={{ backgroundColor: '#F5F0E5' }}>
       <Navbar />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 pt-16 pb-24">
 
@@ -47,7 +47,7 @@ export default async function ProfilePage() {
             )}
           </div>
           <div className="flex-1 min-w-0">
-            <h1 className="font-bold text-lg truncate" style={{ color: '#0F1B13' }}>
+            <h1 className="font-bold text-lg truncate" style={{ color: '#15221B' }}>
               {profile?.full_name ?? profile?.username ?? user.email}
             </h1>
             {profile?.city && <p className="text-sm" style={{ color: '#9CA3AF' }}>{profile.city}</p>}
@@ -60,11 +60,11 @@ export default async function ProfilePage() {
 
         {/* Mis publicaciones */}
         <div className="flex items-center justify-between mb-4">
-          <h2 className="font-semibold" style={{ color: '#0F1B13' }}>Mis publicaciones</h2>
+          <h2 className="font-semibold" style={{ color: '#15221B' }}>Mis publicaciones</h2>
           <Link
             href="/listings/new"
             className="flex items-center gap-1.5 text-sm font-medium hover:opacity-80 transition-opacity"
-            style={{ color: '#EF4D28' }}
+            style={{ color: '#FF5A38' }}
           >
             <Plus className="w-4 h-4" /> Publicar
           </Link>
@@ -79,12 +79,12 @@ export default async function ProfilePage() {
             <div className="w-16 h-16 rounded-2xl bg-white border border-black/8 flex items-center justify-center mb-4">
               <Package className="w-8 h-8" style={{ color: '#B0A89E' }} />
             </div>
-            <p className="font-semibold" style={{ color: '#0F1B13' }}>Aún no tienes publicaciones</p>
+            <p className="font-semibold" style={{ color: '#15221B' }}>Aún no tienes publicaciones</p>
             <p className="text-sm mt-1" style={{ color: '#9CA3AF' }}>¡Publica tu primer artículo gratis!</p>
             <Link
               href="/listings/new"
               className="mt-5 text-white font-bold px-6 py-3 rounded-xl text-sm hover:opacity-90 transition-opacity"
-              style={{ backgroundColor: '#EF4D28' }}
+              style={{ backgroundColor: '#FF5A38' }}
             >
               Publicar ahora
             </Link>

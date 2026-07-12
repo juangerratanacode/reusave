@@ -8,12 +8,12 @@ import { Camera, X, Loader2, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 import { VENEZUELA_STATES, CITIES_BY_STATE } from '@/lib/venezuela'
 
-const CORAL = '#EF4D28'
-const VERDE = '#22A45D'
-const TINTA = '#0F1B13'
-const PAPEL = '#F0EDE6'
+const CORAL = '#FF5A38'
+const VERDE = '#0FA46A'
+const TINTA = '#15221B'
+const PAPEL = '#F5F0E5'
 
-const inputClass = "w-full bg-white border border-black/10 rounded-xl px-4 py-3 text-sm placeholder-[#B0A89E] focus:outline-none focus:border-[#EF4D28] transition-colors"
+const inputClass = "w-full bg-white border border-black/10 rounded-xl px-4 py-3 text-sm placeholder-[#B0A89E] focus:outline-none focus:border-[#FF5A38] transition-colors"
 const labelClass = "block text-sm font-medium mb-1.5"
 
 export default function NewListingPage() {
@@ -41,6 +41,8 @@ export default function NewListingPage() {
     is_urgent: false,
     pickup_only: true,
     whatsapp: '',
+    listing_type: 'sale' as 'sale' | 'exchange' | 'both',
+    exchange_for: '',
   })
 
   useEffect(() => {
@@ -99,7 +101,7 @@ export default function NewListingPage() {
           user_id: user.id,
           title: form.title,
           description: form.description || null,
-          price: parseFloat(form.price) || 0,
+          price: form.listing_type === 'exchange' ? 0 : (parseFloat(form.price) || 0),
           category_id: parseInt(form.category_id),
           condition: form.condition || null,
           city: form.city || null,
@@ -107,6 +109,8 @@ export default function NewListingPage() {
           address_hint: form.address_hint || null,
           is_urgent: form.is_urgent,
           pickup_only: form.pickup_only,
+          listing_type: form.listing_type,
+          exchange_for: (form.listing_type !== 'sale') ? (form.exchange_for || null) : null,
         })
         .select().single()
 
@@ -263,7 +267,7 @@ export default function NewListingPage() {
                   <button key={c.id} type="button" onClick={() => set('category_id', String(c.id))}
                     className="px-3 py-2.5 rounded-xl text-sm text-left border transition-all"
                     style={{
-                      backgroundColor: form.category_id === String(c.id) ? '#F0EDE6' : '#F9F7F4',
+                      backgroundColor: form.category_id === String(c.id) ? '#F5F0E5' : '#F9F7F4',
                       borderColor: form.category_id === String(c.id) ? TINTA : 'rgba(0,0,0,0.08)',
                       color: form.category_id === String(c.id) ? TINTA : '#6B7280',
                       fontWeight: form.category_id === String(c.id) ? 600 : 400,
@@ -276,7 +280,39 @@ export default function NewListingPage() {
           )}
         </div>
 
+        {/* Tipo de publicación */}
+        <div className="bg-white rounded-2xl p-4 border border-black/8">
+          <label className={labelClass} style={{ color: '#6B7280' }}>Tipo de publicación *</label>
+          <div className="flex gap-2">
+            {([
+              { value: 'sale', label: '💰 Venta' },
+              { value: 'exchange', label: '💱 Intercambio' },
+              { value: 'both', label: '💰💱 Ambos' },
+            ] as const).map(opt => (
+              <button key={opt.value} type="button" onClick={() => set('listing_type', opt.value)}
+                className="flex-1 py-2.5 rounded-xl text-sm font-semibold border transition-all"
+                style={{
+                  backgroundColor: form.listing_type === opt.value ? CORAL : '#F9F7F4',
+                  color: form.listing_type === opt.value ? 'white' : '#6B7280',
+                  borderColor: form.listing_type === opt.value ? CORAL : 'rgba(0,0,0,0.08)',
+                }}>
+                {opt.label}
+              </button>
+            ))}
+          </div>
+
+          {form.listing_type !== 'sale' && (
+            <div className="mt-3">
+              <label className="block text-xs text-gray-400 mb-1">¿Qué aceptas a cambio?</label>
+              <input value={form.exchange_for} onChange={e => set('exchange_for', e.target.value)}
+                placeholder="Ej: sofá, bombillo, electrodomésticos..."
+                className={inputClass} style={{ color: TINTA }} />
+            </div>
+          )}
+        </div>
+
         {/* Precio */}
+        {form.listing_type !== 'exchange' && (
         <div className="bg-white rounded-2xl p-4 border border-black/8">
           <label className={labelClass} style={{ color: '#6B7280' }}>Precio (USD)</label>
           <div className="relative">
@@ -286,6 +322,7 @@ export default function NewListingPage() {
               className={`${inputClass} pl-8`} style={{ color: TINTA }} />
           </div>
         </div>
+        )}
 
         {/* Condición */}
         <div className="bg-white rounded-2xl p-4 border border-black/8">

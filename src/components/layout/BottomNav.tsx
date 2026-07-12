@@ -3,8 +3,8 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Home, PlusCircle, Heart, User, Search } from 'lucide-react'
 
-const CORAL = '#EF4D28'
-const TINTA = '#0F1B13'
+const CORAL = '#FF5A38'
+const TINTA = '#15221B'
 
 const links = [
   { href: '/feed',         icon: Home,       label: 'Inicio' },

@@ -7,10 +7,10 @@ import { useRouter } from 'next/navigation'
 import { formatPrice, timeAgo } from '@/lib/utils'
 import BottomNav from '@/components/layout/BottomNav'
 
-const CORAL = '#EF4D28'
-const VERDE = '#22A45D'
-const TINTA = '#0F1B13'
-const PAPEL = '#F0EDE6'
+const CORAL = '#FF5A38'
+const VERDE = '#0FA46A'
+const TINTA = '#15221B'
+const PAPEL = '#F5F0E5'
 
 type Props = {
   listings: any[]
@@ -51,7 +51,7 @@ export default function LandingPage({ listings, categories, searchParams }: Prop
               value={q}
               onChange={e => setQ(e.target.value)}
               placeholder="Busca artículos, categorías..."
-              className="w-full bg-[#F5F2ED] border border-black/10 rounded-full pl-9 pr-8 py-2 text-sm placeholder-[#B0A89E] focus:outline-none focus:border-[#EF4D28] focus:bg-white transition-colors"
+              className="w-full bg-[#F5F2ED] border border-black/10 rounded-full pl-9 pr-8 py-2 text-sm placeholder-[#B0A89E] focus:outline-none focus:border-[#FF5A38] focus:bg-white transition-colors"
               style={{ color: TINTA }}
             />
             {q && (
@@ -135,7 +135,7 @@ export default function LandingPage({ listings, categories, searchParams }: Prop
               value={q}
               onChange={e => setQ(e.target.value)}
               placeholder="¿Qué buscas?"
-              className="w-full bg-[#F5F2ED] border border-black/10 rounded-full pl-9 pr-4 py-2 text-sm placeholder-[#B0A89E] focus:outline-none focus:border-[#EF4D28] transition-colors"
+              className="w-full bg-[#F5F2ED] border border-black/10 rounded-full pl-9 pr-4 py-2 text-sm placeholder-[#B0A89E] focus:outline-none focus:border-[#FF5A38] transition-colors"
               style={{ color: TINTA }}
             />
           </div>
@@ -228,7 +228,7 @@ export default function LandingPage({ listings, categories, searchParams }: Prop
                 return (
                   <Link key={listing.id} href={`/listings/${listing.id}`} className="block group">
                     <article className="bg-white rounded-2xl overflow-hidden border border-black/8 hover:shadow-md transition-all group-active:scale-[0.98]">
-                      <div className="relative aspect-square bg-[#F0EDE6]">
+                      <div className="relative aspect-square bg-[#F5F0E5]">
                         {cover
                           ? <Image src={cover.url} alt={listing.title} fill className="object-cover" sizes="(max-width:640px) 50vw, 200px" />
                           : <div className="w-full h-full flex items-center justify-center text-3xl">📦</div>

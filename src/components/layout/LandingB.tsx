@@ -9,7 +9,7 @@ export default function LandingB() {
       {/* Navbar */}
       <header className="px-5 h-14 flex items-center justify-between border-b border-[#1a1a1a]">
         <span className="font-black text-xl text-white">
-          resuel<span style={{ color: '#EF4D28' }}>✓</span>e
+          resuel<span style={{ color: '#FF5A38' }}>✓</span>e
         </span>
         <div className="flex items-center gap-3">
           <Link href="/auth/login" className="text-sm text-gray-400 hover:text-white transition-colors">
@@ -18,7 +18,7 @@ export default function LandingB() {
           <Link
             href="/auth/login"
             className="text-sm hover:opacity-90 text-white font-bold px-4 py-2 rounded-full transition-colors"
-            style={{ backgroundColor: '#EF4D28' }}
+            style={{ backgroundColor: '#FF5A38' }}
           >
             Registrarse
           </Link>
@@ -34,7 +34,7 @@ export default function LandingB() {
 
         <h1 className="text-4xl font-extrabold leading-tight max-w-sm">
           Lo que no usas,{' '}
-          <span style={{ color: '#22A45D' }}>alguien lo necesita</span>
+          <span style={{ color: '#0FA46A' }}>alguien lo necesita</span>
         </h1>
 
         <p className="mt-4 text-gray-400 text-base max-w-xs leading-relaxed">
@@ -45,7 +45,7 @@ export default function LandingB() {
           <Link
             href="/auth/login"
             className="w-full hover:opacity-90 text-white font-bold py-4 rounded-2xl flex items-center justify-center gap-2 transition-colors text-base"
-            style={{ backgroundColor: '#EF4D28' }}
+            style={{ backgroundColor: '#FF5A38' }}
           >
             Publicar gratis <ArrowRight className="w-5 h-5" />
           </Link>
@@ -145,14 +145,14 @@ export default function LandingB() {
         <Link
           href="/auth/login"
           className="inline-flex items-center gap-2 hover:opacity-90 text-white font-bold px-8 py-4 rounded-2xl transition-colors"
-          style={{ backgroundColor: '#EF4D28' }}
+          style={{ backgroundColor: '#FF5A38' }}
         >
           Crear cuenta gratis <ArrowRight className="w-5 h-5" />
         </Link>
       </section>
 
       <footer className="text-center py-6 text-xs text-gray-700 border-t border-[#1a1a1a]">
-        <span className="font-black text-white">resuel<span style={{ color: '#EF4D28' }}>✓</span>e</span>
+        <span className="font-black text-white">resuel<span style={{ color: '#FF5A38' }}>✓</span>e</span>
         {' '}— Hecho con ❤️ para Venezuela
       </footer>
     </div>

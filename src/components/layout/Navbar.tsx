@@ -4,8 +4,8 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { Search, X, Plus } from 'lucide-react'
 import { useState, useEffect, useRef } from 'react'
 
-const CORAL = '#EF4D28'
-const TINTA = '#0F1B13'
+const CORAL = '#FF5A38'
+const TINTA = '#15221B'
 
 const SUGGESTIONS = [
   'iPhone', 'Nevera', 'Televisor', 'Moto', 'Ropa bebé',
@@ -78,7 +78,7 @@ export default function Navbar() {
               onChange={e => setQ(e.target.value)}
               onFocus={() => setFocused(true)}
               placeholder="Busca artículos, categorías, ciudad..."
-              className="w-full bg-[#F5F2ED] border border-black/10 rounded-full pl-9 pr-9 py-2 text-sm placeholder-[#B0A89E] focus:outline-none focus:border-[#EF4D28] focus:bg-white transition-colors"
+              className="w-full bg-[#F5F2ED] border border-black/10 rounded-full pl-9 pr-9 py-2 text-sm placeholder-[#B0A89E] focus:outline-none focus:border-[#FF5A38] focus:bg-white transition-colors"
               style={{ color: TINTA }}
             />
             {q && (

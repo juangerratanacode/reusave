@@ -5,9 +5,9 @@ import { createClient } from '@/lib/supabase'
 import { ArrowLeft, Eye, EyeOff } from 'lucide-react'
 import Link from 'next/link'
 
-const CORAL = '#EF4D28'
-const TINTA = '#0F1B13'
-const PAPEL = '#F0EDE6'
+const CORAL = '#FF5A38'
+const TINTA = '#15221B'
+const PAPEL = '#F5F0E5'
 
 export default function LoginPage() {
   const supabase = createClient()
@@ -37,7 +37,7 @@ export default function LoginPage() {
     }
   }
 
-  const inputClass = "w-full bg-white border border-black/10 rounded-xl px-4 py-3 text-sm placeholder-[#B0A89E] focus:outline-none focus:border-[#EF4D28] transition-colors"
+  const inputClass = "w-full bg-white border border-black/10 rounded-xl px-4 py-3 text-sm placeholder-[#B0A89E] focus:outline-none focus:border-[#FF5A38] transition-colors"
 
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: PAPEL }}>

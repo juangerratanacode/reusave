@@ -9,7 +9,7 @@ import { VENEZUELA_STATES } from '@/lib/venezuela'
 
 const PAPEL = '#F5F0E5'
 const TINTA = '#15221B'
-const CORAL = '#EF4D28'
+const CORAL = '#FF5A38'
 
 export default function ProfileSettingsPage() {
   const supabase = createClient()

@@ -7,11 +7,12 @@ import Link from 'next/link'
 import Image from 'next/image'
 import BackButton from '@/components/layout/BackButton'
 import ReportButton from '@/components/listings/ReportButton'
+import OfferButton from '@/components/listings/OfferButton'
 
-const CORAL = '#EF4D28'
-const VERDE = '#22A45D'
-const TINTA = '#0F1B13'
-const PAPEL = '#F0EDE6'
+const CORAL = '#FF5A38'
+const VERDE = '#0FA46A'
+const TINTA = '#15221B'
+const PAPEL = '#F5F0E5'
 
 export default async function ListingDetailPage({ params }: { params: { id: string } }) {
   const supabase = createClient()
@@ -75,7 +76,7 @@ export default async function ListingDetailPage({ params }: { params: { id: stri
           {/* Badges */}
           <div className="flex items-center gap-2 flex-wrap">
             {cat && (
-              <span className="text-xs px-3 py-1 rounded-full font-medium" style={{ backgroundColor: '#F0EDE6', color: '#6B7280', border: '1px solid rgba(0,0,0,0.08)' }}>
+              <span className="text-xs px-3 py-1 rounded-full font-medium" style={{ backgroundColor: '#F5F0E5', color: '#6B7280', border: '1px solid rgba(0,0,0,0.08)' }}>
                 {cat.icon} {cat.name}
               </span>
             )}
@@ -85,7 +86,7 @@ export default async function ListingDetailPage({ params }: { params: { id: stri
               </span>
             )}
             {listing.pickup_only && (
-              <span className="text-xs px-3 py-1 rounded-full font-medium" style={{ backgroundColor: '#F0EDE6', color: '#6B7280', border: '1px solid rgba(0,0,0,0.08)' }}>
+              <span className="text-xs px-3 py-1 rounded-full font-medium" style={{ backgroundColor: '#F5F0E5', color: '#6B7280', border: '1px solid rgba(0,0,0,0.08)' }}>
                 📍 Solo recogida
               </span>
             )}
@@ -94,9 +95,30 @@ export default async function ListingDetailPage({ params }: { params: { id: stri
           {/* Título y precio */}
           <div>
             <h2 className="text-xl font-bold" style={{ color: TINTA }}>{listing.title}</h2>
-            <p className="text-3xl font-black mt-1" style={{ color: VERDE }}>
-              {formatPrice(listing.price, listing.currency)}
-            </p>
+            {listing.listing_type === 'exchange' ? (
+              <div className="mt-2">
+                <span className="inline-block text-sm font-bold px-3 py-1 rounded-full" style={{ backgroundColor: '#EDE9FE', color: '#7C3AED' }}>
+                  💱 Solo intercambio
+                </span>
+                {listing.exchange_for && (
+                  <p className="text-sm mt-2" style={{ color: '#6B7280' }}>Acepta a cambio: <span className="font-medium" style={{ color: TINTA }}>{listing.exchange_for}</span></p>
+                )}
+              </div>
+            ) : listing.listing_type === 'both' ? (
+              <div className="mt-1">
+                <p className="text-3xl font-black" style={{ color: VERDE }}>{formatPrice(listing.price, listing.currency)}</p>
+                <div className="mt-1">
+                  <span className="inline-block text-xs font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: '#EDE9FE', color: '#7C3AED' }}>💱 o intercambio</span>
+                  {listing.exchange_for && (
+                    <p className="text-sm mt-1" style={{ color: '#6B7280' }}>Acepta a cambio: <span className="font-medium" style={{ color: TINTA }}>{listing.exchange_for}</span></p>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <p className="text-3xl font-black mt-1" style={{ color: VERDE }}>
+                {formatPrice(listing.price, listing.currency)}
+              </p>
+            )}
           </div>
 
           {/* Meta */}
@@ -179,17 +201,27 @@ export default async function ListingDetailPage({ params }: { params: { id: stri
       <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/95 backdrop-blur border-t border-black/8">
         <div className="max-w-2xl mx-auto">
           {session ? (
-            /* Usuario registrado → WhatsApp */
+            /* Usuario registrado → WhatsApp + Oferta */
             whatsappLink ? (
-              <a
-                href={whatsappLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 w-full text-white font-bold py-4 rounded-xl text-base transition-all hover:opacity-90"
-                style={{ backgroundColor: '#25D366' }}
-              >
-                💬 Contactar por WhatsApp
-              </a>
+              <div className="space-y-2">
+                <a
+                  href={whatsappLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 w-full text-white font-bold py-4 rounded-xl text-base transition-all hover:opacity-90"
+                  style={{ backgroundColor: '#25D366' }}
+                >
+                  💬 Contactar por WhatsApp
+                </a>
+                {!isOwner && listing.listing_type !== 'exchange' && (
+                  <OfferButton
+                    listingId={listing.id}
+                    sellerId={listing.user_id}
+                    sellerWhatsapp={profile?.whatsapp ?? ''}
+                    listingTitle={listing.title}
+                  />
+                )}
+              </div>
             ) : (
               <p className="text-center text-sm" style={{ color: '#9CA3AF' }}>El vendedor no tiene WhatsApp configurado.</p>
             )

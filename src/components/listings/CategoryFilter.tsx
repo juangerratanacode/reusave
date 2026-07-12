@@ -2,8 +2,8 @@
 import { useRouter } from 'next/navigation'
 import { Category } from '@/types'
 
-const VERDE = '#EF4D28'
-const VERDE_BG = '#FFF0EC'
+const CORAL = '#FF5A38'
+const CORAL_BG = '#FFF0EC'
 const TINTA = '#15221B'
 
 export default function CategoryFilter({ categories, active }: { categories: Category[], active?: string }) {
@@ -19,9 +19,9 @@ export default function CategoryFilter({ categories, active }: { categories: Cat
           onClick={() => router.push('/feed')}
           className="shrink-0 text-base font-bold px-5 py-2.5 rounded-full border-2 transition-all whitespace-nowrap cursor-pointer"
           style={{
-            backgroundColor: !active ? VERDE : 'white',
+            backgroundColor: !active ? CORAL : 'white',
             color: !active ? 'white' : '#6B7280',
-            borderColor: !active ? VERDE : 'rgba(0,0,0,0.10)',
+            borderColor: !active ? CORAL : 'rgba(0,0,0,0.10)',
           }}
         >
           Todo
@@ -35,9 +35,9 @@ export default function CategoryFilter({ categories, active }: { categories: Cat
               onClick={() => router.push(isActive ? '/feed' : `/feed?category=${cat.slug}`)}
               className="shrink-0 text-base font-bold px-5 py-2.5 rounded-full border-2 transition-all whitespace-nowrap cursor-pointer"
               style={{
-                backgroundColor: isActive ? VERDE : VERDE_BG,
+                backgroundColor: isActive ? CORAL : CORAL_BG,
                 color: isActive ? 'white' : TINTA,
-                borderColor: isActive ? VERDE : 'transparent',
+                borderColor: isActive ? CORAL : 'transparent',
               }}
             >
               {cat.icon} {cat.name}
