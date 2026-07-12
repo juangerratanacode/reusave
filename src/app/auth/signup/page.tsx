@@ -39,10 +39,15 @@ export default function SignupPage() {
     setLoading(false)
 
     if (err) {
-      if (err.message.includes('already registered')) {
-        setError('Ya existe una cuenta con ese correo.')
+      const msg = err.message ?? ''
+      if (msg.includes('already registered') || msg.includes('already exists')) {
+        setError('Ya existe una cuenta con ese correo. ¿Quieres iniciar sesión?')
+      } else if (msg.includes('invalid') || msg.includes('email')) {
+        setError('Correo electrónico no válido.')
+      } else if (msg.includes('password')) {
+        setError('La contraseña no cumple los requisitos mínimos.')
       } else {
-        setError(err.message || 'Error al crear la cuenta.')
+        setError('No se pudo crear la cuenta. Intenta de nuevo.')
       }
     } else {
       setSuccess(true)
