@@ -1,5 +1,4 @@
 import { createClient } from '@/lib/supabase-server'
-import { redirect } from 'next/navigation'
 import { Suspense } from 'react'
 import ListingCard from '@/components/listings/ListingCard'
 import CategoryFilter from '@/components/listings/CategoryFilter'
@@ -18,9 +17,7 @@ export default async function FeedPage({
 }) {
   const supabase = createClient()
 
-  const { data: { session } } = await supabase.auth.getSession()
-  if (!session) redirect('/')
-
+  // Feed is public — no auth required
   let query = supabase
     .from('listings')
     .select(`

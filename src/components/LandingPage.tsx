@@ -1,35 +1,23 @@
 'use client'
 import Link from 'next/link'
+import Image from 'next/image'
 import {
   Search, ArrowRight, MapPin, ShieldCheck, Zap,
-  Package, Smartphone, Shirt, Sofa, Car, Wrench,
-  Heart, Plus, ChevronRight
+  Smartphone, Shirt, Sofa, Car, Wrench,
+  Heart, Plus, ChevronRight, X, Package
 } from 'lucide-react'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { formatPrice, timeAgo } from '@/lib/utils'
 
 const CORAL = '#EF4D28'
 const VERDE = '#22A45D'
 const TINTA = '#0F1B13'
 const PAPEL = '#F0EDE6'
 
-const MOCK_PRODUCTS = [
-  { id: 1, title: 'iPhone 13 Pro', price: '$280', state: 'Caracas', gradient: 'from-slate-200 to-slate-100', icon: Smartphone, badge: null },
-  { id: 2, title: 'Sofá 3 puestos', price: '$95', state: 'Valencia', gradient: 'from-amber-100 to-amber-50', icon: Sofa, badge: 'DONACIÓN' },
-  { id: 3, title: 'Moto Yamaha 150', price: '$800', state: 'Maracaibo', gradient: 'from-blue-100 to-blue-50', icon: Car, badge: null },
-  { id: 4, title: 'Ropa niño 2-4 años', price: 'GRATIS', state: 'Barquisimeto', gradient: 'from-green-100 to-green-50', icon: Shirt, badge: 'GRATIS' },
-  { id: 5, title: 'Samsung 55" 4K', price: '$150', state: 'Maracay', gradient: 'from-sky-100 to-sky-50', icon: Package, badge: null },
-  { id: 6, title: 'Kit herramientas', price: '$40', state: 'Mérida', gradient: 'from-orange-100 to-orange-50', icon: Wrench, badge: '🆘 URGENTE' },
-]
-
-const CATEGORIES = [
-  { name: 'Donaciones', icon: Heart, iconColor: VERDE, bg: '#DCFAEB', border: '#A7F3C1' },
-  { name: 'Electrónica', icon: Smartphone, iconColor: '#2563EB', bg: '#DBEAFE', border: '#BFDBFE' },
-  { name: 'Hogar', icon: Sofa, iconColor: '#D97706', bg: '#FEF3C7', border: '#FDE68A' },
-  { name: 'Ropa', icon: Shirt, iconColor: '#DB2777', bg: '#FCE7F3', border: '#FBCFE8' },
-  { name: 'Vehículos', icon: Car, iconColor: '#0369A1', bg: '#E0F2FE', border: '#BAE6FD' },
-  { name: 'Servicios', icon: Wrench, iconColor: CORAL, bg: '#FDEEE9', border: '#FBBFAA' },
-]
+const ICON_MAP: Record<string, any> = {
+  Smartphone, Shirt, Sofa, Car, Wrench, Heart, Package
+}
 
 function Logo({ size = 'text-xl' }: { size?: string }) {
   return (
@@ -39,41 +27,63 @@ function Logo({ size = 'text-xl' }: { size?: string }) {
   )
 }
 
-export default function LandingPage() {
-  const [q, setQ] = useState('')
+type Props = {
+  listings: any[]
+  categories: any[]
+  searchParams: { q?: string; state?: string; category?: string }
+}
+
+export default function LandingPage({ listings, categories, searchParams }: Props) {
+  const [q, setQ] = useState(searchParams.q ?? '')
   const router = useRouter()
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
-    router.push(`/auth/login`)
+    const params = new URLSearchParams()
+    if (q.trim()) params.set('q', q.trim())
+    router.push(`/?${params.toString()}`)
   }
 
-  return (
-    <div className="min-h-screen overflow-x-hidden" style={{ backgroundColor: PAPEL, color: TINTA }}>
+  const clearSearch = () => {
+    setQ('')
+    router.push('/')
+  }
 
-      {/* ── NAVBAR ── */}
-      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-black/8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
+  const hasFilters = searchParams.q || searchParams.state || searchParams.category
+  const showEmptyState = hasFilters && listings.length === 0
+
+  return (
+    <div className="min-h-screen" style={{ backgroundColor: PAPEL, color: TINTA }}>
+
+      {/* ── NAVBAR — FIXED ── */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-black/8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-3">
           <Logo />
 
-          <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-md relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#9CA3AF' }} />
+          {/* Search */}
+          <form onSubmit={handleSearch} className="flex-1 max-w-xl relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none" style={{ color: '#9CA3AF' }} />
             <input
               type="text"
               value={q}
               onChange={e => setQ(e.target.value)}
               placeholder="Busca artículos, categorías..."
-              className="w-full bg-[#F5F2ED] border border-black/10 rounded-full pl-9 pr-4 py-2 text-sm placeholder-[#B0A89E] focus:outline-none focus:border-[#EF4D28] transition-colors"
+              className="w-full bg-[#F5F2ED] border border-black/10 rounded-full pl-9 pr-8 py-2 text-sm placeholder-[#B0A89E] focus:outline-none focus:border-[#EF4D28] focus:bg-white transition-colors"
               style={{ color: TINTA }}
             />
+            {q && (
+              <button type="button" onClick={clearSearch} className="absolute right-3 top-1/2 -translate-y-1/2 hover:opacity-70">
+                <X className="w-3.5 h-3.5" style={{ color: '#9CA3AF' }} />
+              </button>
+            )}
           </form>
 
           <div className="flex items-center gap-2 shrink-0">
-            <Link href="/auth/login" className="text-sm font-medium px-3 py-1.5 rounded-full border border-black/15 hover:border-black/30 transition-colors" style={{ color: '#6B7280' }}>
+            <Link href="/auth/login" className="hidden sm:block text-sm font-medium px-3 py-1.5 rounded-full border border-black/15 hover:border-black/30 transition-colors" style={{ color: '#6B7280' }}>
               Iniciar sesión
             </Link>
             <Link
-              href="/auth/login"
+              href="/auth/signup"
               className="flex items-center gap-1.5 text-white font-bold text-sm px-4 py-2 rounded-full transition-all hover:opacity-90"
               style={{ backgroundColor: CORAL }}
             >
@@ -86,298 +96,232 @@ export default function LandingPage() {
       </header>
 
       {/* ── HERO ── */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute -top-20 -left-20 w-96 h-96 rounded-full blur-3xl opacity-30" style={{ background: CORAL }} />
-          <div className="absolute top-10 right-0 w-80 h-80 rounded-full blur-3xl opacity-20" style={{ background: VERDE }} />
+      <section className="pt-20 pb-8 px-4 sm:px-6 max-w-7xl mx-auto">
+        {/* Badge emergencia */}
+        <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold mb-6 mt-4" style={{ backgroundColor: '#FDEEE9', color: CORAL, border: `1px solid #FBBFAA` }}>
+          <span className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: CORAL }} />
+          Apoyo solidario post-sismo Venezuela
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pt-12 pb-10">
-          {/* Badge emergencia */}
-          <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold mb-6" style={{ backgroundColor: '#FDEEE9', color: CORAL, border: `1px solid #FBBFAA` }}>
-            <span className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: CORAL }} />
-            Apoyo solidario post-sismo Venezuela
-          </div>
+        <div className="flex flex-col lg:flex-row lg:items-start gap-8 lg:gap-12">
+          <div className="flex-1 min-w-0">
+            <h1 className="text-4xl sm:text-5xl font-black leading-[1.05] tracking-tight mb-4" style={{ color: TINTA }}>
+              Lo que no usas,{' '}
+              <span style={{ color: VERDE }}>alguien lo necesita</span>
+            </h1>
+            <p className="text-base leading-relaxed mb-6 max-w-lg" style={{ color: '#6B7280' }}>
+              Marketplace de segunda mano para venezolanos. Compra, vende y dona — sin intermediarios, a precios reales.
+            </p>
 
-          <div className="flex flex-col lg:flex-row lg:items-center gap-10 lg:gap-16">
-            {/* Left */}
-            <div className="flex-1 min-w-0">
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black leading-[1.05] tracking-tight mb-5" style={{ color: TINTA }}>
-                Lo que no usas,{' '}
-                <span style={{ color: VERDE }}>alguien</span>
-                <br />
-                <span style={{ color: VERDE }}>lo necesita</span>
-              </h1>
-              <p className="text-base sm:text-lg leading-relaxed mb-8 max-w-lg" style={{ color: '#6B7280' }}>
-                Marketplace de segunda mano para venezolanos. Compra, vende y dona — sin intermediarios, a precios reales.
-              </p>
+            {/* Search bar hero (mobile) */}
+            <form onSubmit={handleSearch} className="flex gap-2 mb-4 max-w-xl lg:hidden">
+              <div className="flex-1 relative">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#9CA3AF' }} />
+                <input
+                  type="text"
+                  value={q}
+                  onChange={e => setQ(e.target.value)}
+                  placeholder="¿Qué estás buscando?"
+                  className="w-full bg-white border border-black/10 rounded-2xl pl-10 pr-4 py-3.5 text-sm placeholder-[#B0A89E] focus:outline-none focus:border-[#EF4D28] transition-colors shadow-sm"
+                  style={{ color: TINTA }}
+                />
+              </div>
+              <button type="submit" className="text-white font-bold px-5 py-3.5 rounded-2xl hover:opacity-90 shrink-0" style={{ backgroundColor: CORAL }}>
+                Buscar
+              </button>
+            </form>
 
-              <form onSubmit={handleSearch} className="flex gap-2 mb-6 max-w-xl">
-                <div className="flex-1 relative">
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5" style={{ color: '#9CA3AF' }} />
-                  <input
-                    type="text"
-                    value={q}
-                    onChange={e => setQ(e.target.value)}
-                    placeholder="¿Qué estás buscando?"
-                    className="w-full bg-white border border-black/10 rounded-2xl pl-11 pr-4 py-4 text-base placeholder-[#B0A89E] focus:outline-none focus:border-[#EF4D28] transition-colors shadow-sm"
-                    style={{ color: TINTA }}
-                  />
+            {/* Stats */}
+            <div className="flex flex-wrap gap-5">
+              {[
+                { num: '24', label: 'estados' },
+                { num: '$0', label: 'para publicar' },
+                { num: '100%', label: 'sin comisiones' },
+              ].map(s => (
+                <div key={s.label} className="flex items-center gap-1.5">
+                  <span className="text-base font-black" style={{ color: CORAL }}>{s.num}</span>
+                  <span className="text-xs" style={{ color: '#9CA3AF' }}>{s.label}</span>
                 </div>
-                <button
-                  type="submit"
-                  className="text-white font-bold px-6 py-4 rounded-2xl transition-all shrink-0 cursor-pointer hover:opacity-90 shadow-sm"
-                  style={{ backgroundColor: CORAL }}
-                >
-                  Buscar
-                </button>
-              </form>
-
-              <div className="flex flex-wrap gap-2 items-center">
-                <span className="text-xs" style={{ color: '#B0A89E' }}>Popular:</span>
-                {['iPhone', 'Nevera', 'Ropa', 'Moto', 'Donación'].map(tag => (
-                  <Link
-                    key={tag}
-                    href="/auth/login"
-                    className="text-xs font-medium px-3 py-1 rounded-full border border-black/10 bg-white hover:border-[#EF4D28] hover:text-[#EF4D28] transition-colors cursor-pointer"
-                    style={{ color: '#6B7280' }}
-                  >
-                    {tag}
-                  </Link>
-                ))}
-              </div>
-            </div>
-
-            {/* Right: product grid preview */}
-            <div className="lg:w-[420px] shrink-0">
-              <div className="grid grid-cols-3 gap-2">
-                {MOCK_PRODUCTS.map((p) => {
-                  const Icon = p.icon
-                  return (
-                    <div
-                      key={p.id}
-                      className="relative bg-white rounded-xl overflow-hidden cursor-pointer hover:shadow-md hover:scale-[1.02] transition-all duration-200 border border-black/8 group"
-                    >
-                      <div className={`bg-gradient-to-br ${p.gradient} h-20 flex items-center justify-center`}>
-                        <Icon className="w-7 h-7 opacity-50 group-hover:opacity-70 transition-opacity" style={{ color: TINTA }} />
-                      </div>
-                      {p.badge && (
-                        <span
-                          className="absolute top-1.5 left-1.5 text-[9px] font-bold px-1.5 py-0.5 rounded-md text-white"
-                          style={{ backgroundColor: p.badge === '🆘 URGENTE' ? '#DC2626' : VERDE }}
-                        >
-                          {p.badge}
-                        </span>
-                      )}
-                      <div className="p-2">
-                        <p className="text-[11px] font-semibold truncate leading-tight" style={{ color: TINTA }}>{p.title}</p>
-                        <p className="text-[11px] font-bold mt-0.5" style={{ color: VERDE }}>{p.price}</p>
-                        <p className="text-[10px] mt-0.5 truncate" style={{ color: '#9CA3AF' }}>{p.state}</p>
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-              <p className="text-xs text-center mt-3" style={{ color: '#B0A89E' }}>Artículos reales de usuarios venezolanos</p>
+              ))}
             </div>
           </div>
-        </div>
 
-        {/* Stats bar */}
-        <div className="border-t border-b border-black/8 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-wrap gap-6 sm:gap-10">
-            {[
-              { num: '24', label: 'estados de Venezuela' },
-              { num: '$0', label: 'costo para publicar' },
-              { num: 'WhatsApp', label: 'contacto directo' },
-              { num: '100%', label: 'sin comisiones' },
-            ].map(s => (
-              <div key={s.label} className="flex items-center gap-2.5">
-                <span className="text-lg font-black" style={{ color: CORAL }}>{s.num}</span>
-                <span className="text-xs" style={{ color: '#9CA3AF' }}>{s.label}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── CATEGORIES ── */}
-      <section className="py-12 bg-white border-b border-black/8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-black" style={{ color: TINTA }}>Explorar por categoría</h2>
-            <Link href="/auth/login" className="flex items-center gap-1 text-sm font-medium hover:opacity-80 transition-opacity" style={{ color: CORAL }}>
-              Ver todo <ChevronRight className="w-4 h-4" />
-            </Link>
-          </div>
-          <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
-            {CATEGORIES.map(({ name, icon: Icon, iconColor, bg, border }) => (
-              <Link
-                key={name}
-                href="/auth/login"
-                className="flex flex-col items-center gap-2.5 p-4 rounded-2xl border hover:scale-[1.04] transition-all duration-200 cursor-pointer"
-                style={{ backgroundColor: bg, borderColor: border }}
-              >
-                <div className="w-10 h-10 rounded-xl bg-white/70 flex items-center justify-center">
-                  <Icon className="w-5 h-5" style={{ color: iconColor }} />
-                </div>
-                <span className="text-xs font-semibold text-center leading-tight" style={{ color: TINTA }}>{name}</span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── FEATURED LISTINGS ── */}
-      <section className="py-12" style={{ backgroundColor: PAPEL }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-black" style={{ color: TINTA }}>Publicaciones recientes</h2>
-            <Link href="/auth/login" className="flex items-center gap-1 text-sm font-medium hover:opacity-80 transition-opacity" style={{ color: VERDE }}>
-              Ver todas <ChevronRight className="w-4 h-4" />
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-            {MOCK_PRODUCTS.map((p) => {
-              const Icon = p.icon
+          {/* Categories grid desktop */}
+          <div className="hidden lg:grid grid-cols-3 gap-2 w-64 shrink-0">
+            {categories.slice(0, 6).map((cat) => {
+              const IconComp = ICON_MAP[cat.icon] ?? Package
               return (
-                <Link
-                  key={p.id}
-                  href="/auth/login"
-                  className="bg-white rounded-2xl overflow-hidden hover:shadow-md hover:-translate-y-1 transition-all duration-200 cursor-pointer border border-black/8 group"
+                <button
+                  key={cat.id}
+                  onClick={() => router.push(`/?category=${cat.slug}`)}
+                  className="flex flex-col items-center gap-1.5 p-3 rounded-xl border bg-white hover:shadow-sm transition-all cursor-pointer"
+                  style={{ borderColor: searchParams.category === cat.slug ? CORAL : 'rgba(0,0,0,0.08)' }}
                 >
-                  <div className={`bg-gradient-to-br ${p.gradient} h-28 flex items-center justify-center relative`}>
-                    <Icon className="w-10 h-10 opacity-40 group-hover:opacity-60 transition-opacity" style={{ color: TINTA }} />
-                    {p.badge && (
-                      <span
-                        className="absolute top-2 left-2 text-[10px] font-bold px-2 py-0.5 rounded-full text-white"
-                        style={{ backgroundColor: p.badge === '🆘 URGENTE' ? '#DC2626' : VERDE }}
-                      >
-                        {p.badge}
-                      </span>
-                    )}
-                  </div>
-                  <div className="p-3">
-                    <p className="text-sm font-semibold truncate" style={{ color: TINTA }}>{p.title}</p>
-                    <p className="text-sm font-bold mt-0.5" style={{ color: VERDE }}>{p.price}</p>
-                    <div className="flex items-center gap-1 mt-1.5">
-                      <MapPin className="w-3 h-3 shrink-0" style={{ color: '#B0A89E' }} />
-                      <p className="text-xs truncate" style={{ color: '#9CA3AF' }}>{p.state}</p>
+                  <span className="text-xl">{cat.icon}</span>
+                  <span className="text-[10px] font-semibold text-center leading-tight" style={{ color: TINTA }}>{cat.name}</span>
+                </button>
+              )
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ── LISTINGS ── */}
+      <section className="px-4 sm:px-6 pb-16 max-w-7xl mx-auto">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="font-black text-lg" style={{ color: TINTA }}>
+            {hasFilters
+              ? `${listings.length} resultado${listings.length !== 1 ? 's' : ''}${searchParams.q ? ` para "${searchParams.q}"` : ''}`
+              : 'Publicaciones recientes'
+            }
+          </h2>
+          {hasFilters && (
+            <button onClick={clearSearch} className="text-sm hover:opacity-70 transition-opacity" style={{ color: CORAL }}>
+              Limpiar filtros
+            </button>
+          )}
+        </div>
+
+        {/* Categories mobile */}
+        <div className="flex gap-2 overflow-x-auto pb-3 mb-4 lg:hidden scrollbar-hide">
+          <button
+            onClick={() => router.push('/')}
+            className="shrink-0 text-xs font-semibold px-3 py-1.5 rounded-full border transition-all"
+            style={{
+              backgroundColor: !searchParams.category ? CORAL : 'white',
+              color: !searchParams.category ? 'white' : '#6B7280',
+              borderColor: !searchParams.category ? CORAL : 'rgba(0,0,0,0.1)'
+            }}
+          >
+            Todo
+          </button>
+          {categories.map(cat => (
+            <button
+              key={cat.id}
+              onClick={() => router.push(`/?category=${cat.slug}`)}
+              className="shrink-0 text-xs font-semibold px-3 py-1.5 rounded-full border transition-all whitespace-nowrap"
+              style={{
+                backgroundColor: searchParams.category === cat.slug ? CORAL : 'white',
+                color: searchParams.category === cat.slug ? 'white' : '#6B7280',
+                borderColor: searchParams.category === cat.slug ? CORAL : 'rgba(0,0,0,0.1)'
+              }}
+            >
+              {cat.icon} {cat.name}
+            </button>
+          ))}
+        </div>
+
+        {showEmptyState ? (
+          <div className="flex flex-col items-center justify-center py-20">
+            <div className="w-16 h-16 rounded-2xl bg-white border border-black/8 flex items-center justify-center mb-4">
+              <Package className="w-8 h-8" style={{ color: '#B0A89E' }} />
+            </div>
+            <p className="font-semibold" style={{ color: TINTA }}>No hay resultados</p>
+            <p className="text-sm mt-1" style={{ color: '#9CA3AF' }}>Intenta con otra búsqueda</p>
+          </div>
+        ) : listings.length > 0 ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3">
+            {listings.map((listing) => {
+              const cover = listing.listing_images?.find((i: any) => i.is_cover) ?? listing.listing_images?.[0]
+              return (
+                <Link key={listing.id} href={`/listings/${listing.id}`} className="block">
+                  <article className="bg-white rounded-xl overflow-hidden border border-black/8 hover:shadow-md transition-all active:scale-95">
+                    <div className="relative aspect-square bg-[#F5F2ED]">
+                      {cover ? (
+                        <Image src={cover.url} alt={listing.title} fill className="object-cover" sizes="(max-width: 640px) 50vw, 200px" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-3xl">📦</div>
+                      )}
+                      {listing.is_urgent && (
+                        <span className="absolute top-1.5 left-1.5 text-white text-[9px] font-bold px-1.5 py-0.5 rounded" style={{ backgroundColor: CORAL }}>URGENTE</span>
+                      )}
                     </div>
-                  </div>
+                    <div className="p-2.5">
+                      <h3 className="text-sm font-medium line-clamp-2 leading-snug" style={{ color: TINTA }}>{listing.title}</h3>
+                      <p className="text-sm font-bold mt-1" style={{ color: VERDE }}>{formatPrice(listing.price)}</p>
+                      {listing.city && (
+                        <p className="text-[10px] mt-1 flex items-center gap-0.5" style={{ color: '#9CA3AF' }}>
+                          <MapPin className="w-3 h-3" /> {listing.city}
+                        </p>
+                      )}
+                      <p className="text-[10px] mt-0.5" style={{ color: '#B0A89E' }}>{timeAgo(listing.created_at)}</p>
+                    </div>
+                  </article>
                 </Link>
               )
             })}
           </div>
-        </div>
+        ) : (
+          /* Empty feed — prompt to be first */
+          <div className="flex flex-col items-center justify-center py-20 text-center">
+            <div className="text-5xl mb-4">🛍️</div>
+            <p className="font-bold text-lg mb-1" style={{ color: TINTA }}>Sé el primero en publicar</p>
+            <p className="text-sm mb-6" style={{ color: '#9CA3AF' }}>La comunidad está esperando artículos como el tuyo.</p>
+            <Link
+              href="/auth/signup"
+              className="text-white font-bold px-6 py-3 rounded-xl hover:opacity-90 transition-opacity"
+              style={{ backgroundColor: CORAL }}
+            >
+              Publicar ahora — gratis
+            </Link>
+          </div>
+        )}
       </section>
 
-      {/* ── EMERGENCY BANNER ── */}
-      <section className="border-t border-b py-8" style={{ backgroundColor: '#FFF5F2', borderColor: '#FBBFAA' }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div>
-            <p className="font-black text-lg mb-1" style={{ color: TINTA }}>🆘 Categorías de emergencia post-sismo</p>
-            <p className="text-sm" style={{ color: '#9CA3AF' }}>Publicaciones especiales para ayudar a quien más lo necesita</p>
-          </div>
-          <div className="flex flex-wrap gap-2 shrink-0">
+      {/* ── HOW IT WORKS ── */}
+      <section className="py-12 bg-white border-t border-black/8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <h2 className="text-xl font-black mb-8" style={{ color: TINTA }}>¿Cómo funciona?</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[
-              { label: 'Donaciones', bg: VERDE },
-              { label: 'Venta solidaria', bg: CORAL },
-              { label: 'Objetos perdidos', bg: '#6B7280' },
-            ].map(b => (
-              <Link
-                key={b.label}
-                href="/auth/login"
-                className="text-xs font-bold px-4 py-2 rounded-full text-white hover:opacity-90 transition-opacity cursor-pointer"
-                style={{ backgroundColor: b.bg }}
-              >
-                {b.label}
-              </Link>
+              { step: '01', color: VERDE, title: 'Publica en segundos', desc: 'Fotos, descripción y precio. Gratis siempre.' },
+              { step: '02', color: '#2563EB', title: 'Encuentra lo que buscas', desc: 'Busca por categoría o filtra por estado.' },
+              { step: '03', color: CORAL, title: 'Contacta por WhatsApp', desc: 'Sin chat interno. Directo, rápido, seguro.' },
+            ].map(s => (
+              <div key={s.step} className="flex gap-4 bg-[#F5F2ED] rounded-2xl p-5 border border-black/5">
+                <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 text-white text-sm font-black" style={{ backgroundColor: s.color }}>
+                  {s.step}
+                </div>
+                <div>
+                  <p className="font-bold text-sm mb-1" style={{ color: TINTA }}>{s.title}</p>
+                  <p className="text-xs leading-relaxed" style={{ color: '#6B7280' }}>{s.desc}</p>
+                </div>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── HOW IT WORKS ── */}
-      <section className="py-14 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <h2 className="text-2xl font-black mb-2" style={{ color: TINTA }}>¿Cómo funciona?</h2>
-          <p className="mb-10" style={{ color: '#9CA3AF' }}>En 3 pasos, sin complicaciones.</p>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            {[
-              { step: '01', icon: Plus, color: VERDE, title: 'Publica en segundos', desc: 'Sube fotos, describe el artículo y pon tu precio. Completamente gratis.' },
-              { step: '02', icon: Search, color: '#2563EB', title: 'Encuentra lo que buscas', desc: 'Busca por categoría o filtra por tu estado. Más de 24 estados disponibles.' },
-              { step: '03', icon: Zap, color: CORAL, title: 'Conecta por WhatsApp', desc: 'Habla directo con el vendedor. Sin chat interno, sin comisiones, tú controlas.' },
-            ].map(s => {
-              const Icon = s.icon
-              return (
-                <div key={s.step} className="relative bg-white rounded-3xl p-6 border border-black/8 hover:shadow-md transition-shadow">
-                  <span className="absolute top-4 right-4 text-4xl font-black" style={{ color: 'rgba(15,27,19,0.05)' }}>{s.step}</span>
-                  <div className="w-11 h-11 rounded-2xl flex items-center justify-center mb-4" style={{ backgroundColor: s.color }}>
-                    <Icon className="w-5 h-5 text-white" />
-                  </div>
-                  <h3 className="font-bold text-base mb-2" style={{ color: TINTA }}>{s.title}</h3>
-                  <p className="text-sm leading-relaxed" style={{ color: '#6B7280' }}>{s.desc}</p>
-                </div>
-              )
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* ── TRUST ── */}
-      <section className="py-12 border-t border-black/8" style={{ backgroundColor: PAPEL }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {[
-              { icon: ShieldCheck, iconColor: '#2563EB', bg: '#DBEAFE', title: 'Sin pagos en línea', desc: 'El pago es siempre en mano. Tú decides. Sin riesgo de estafas por transferencia.' },
-              { icon: Zap, iconColor: VERDE, bg: '#DCFAEB', title: 'Funciona con internet lento', desc: 'Diseñado para Venezuela. Imágenes optimizadas, carga rápida con datos móviles.' },
-              { icon: MapPin, iconColor: CORAL, bg: '#FDEEE9', title: 'Hecho para venezolanos', desc: 'Precios en dólares, filtros por estado, contacto vía WhatsApp. Sin burocracia.' },
-            ].map(f => {
-              const Icon = f.icon
-              return (
-                <div key={f.title} className="flex gap-4 bg-white rounded-2xl p-5 border border-black/8 hover:shadow-sm transition-shadow">
-                  <div className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: f.bg }}>
-                    <Icon className="w-5 h-5" style={{ color: f.iconColor }} />
-                  </div>
-                  <div>
-                    <p className="font-bold text-sm mb-1" style={{ color: TINTA }}>{f.title}</p>
-                    <p className="text-xs leading-relaxed" style={{ color: '#6B7280' }}>{f.desc}</p>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* ── FINAL CTA ── */}
-      <section className="relative overflow-hidden py-16 bg-white border-t border-black/8">
-        <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(135deg, rgba(239,77,40,0.05) 0%, transparent 60%)' }} />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 text-center">
-          <h2 className="text-3xl sm:text-4xl font-black mb-3" style={{ color: TINTA }}>
-            Empieza ahora.<br />
-            <span style={{ color: VERDE }}>Es gratis.</span>
+      {/* ── CTA FINAL ── */}
+      <section className="py-14 border-t border-black/8" style={{ backgroundColor: PAPEL }}>
+        <div className="max-w-xl mx-auto px-4 text-center">
+          <h2 className="text-2xl font-black mb-2" style={{ color: TINTA }}>
+            Empieza ahora. <span style={{ color: VERDE }}>Es gratis.</span>
           </h2>
-          <p className="text-base mb-8 max-w-md mx-auto" style={{ color: '#6B7280' }}>
-            Únete a la comunidad de venezolanos que ya están comprando, vendiendo y donando.
-          </p>
-          <Link
-            href="/auth/login"
-            className="inline-flex items-center justify-center gap-2 text-white font-black py-4 px-10 rounded-2xl transition-all text-base cursor-pointer hover:opacity-90"
-            style={{ backgroundColor: CORAL, boxShadow: '0 8px 24px rgba(239,77,40,0.25)' }}
-          >
-            Crear cuenta gratis <ArrowRight className="w-5 h-5" />
-          </Link>
-          <p className="mt-4 text-xs" style={{ color: '#B0A89E' }}>Sin tarjeta. Sin pagos. Sin trampa.</p>
+          <p className="text-sm mb-6" style={{ color: '#9CA3AF' }}>Sin tarjeta. Sin pagos. Sin trampa.</p>
+          <div className="flex gap-3 justify-center flex-wrap">
+            <Link
+              href="/auth/signup"
+              className="text-white font-bold px-6 py-3 rounded-xl hover:opacity-90 transition-opacity flex items-center gap-2"
+              style={{ backgroundColor: CORAL }}
+            >
+              Crear cuenta <ArrowRight className="w-4 h-4" />
+            </Link>
+            <Link
+              href="/auth/login"
+              className="font-bold px-6 py-3 rounded-xl border border-black/15 hover:border-black/30 transition-colors"
+              style={{ color: TINTA }}
+            >
+              Ya tengo cuenta
+            </Link>
+          </div>
         </div>
       </section>
 
-      <footer className="border-t border-black/8 py-6" style={{ backgroundColor: PAPEL }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <Logo size="text-base" />
-          <p className="text-xs" style={{ color: '#B0A89E' }}>Hecho con ❤️ para Venezuela · 2026</p>
+      <footer className="border-t border-black/8 py-5" style={{ backgroundColor: PAPEL }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-2">
+          <Logo size="text-sm" />
+          <p className="text-xs" style={{ color: '#B0A89E' }}>entrayresuelve.com · Hecho para Venezuela · 2026</p>
         </div>
       </footer>
     </div>
