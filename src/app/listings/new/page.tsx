@@ -4,19 +4,29 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import { compressImage } from '@/lib/image-compress'
 import { CONDITIONS } from '@/types'
-import { Camera, X, Loader2 } from 'lucide-react'
-import BackButton from '@/components/layout/BackButton'
+import { Camera, X, Loader2, ArrowLeft } from 'lucide-react'
+import Link from 'next/link'
 import { VENEZUELA_STATES, CITIES_BY_STATE } from '@/lib/venezuela'
+
+const CORAL = '#EF4D28'
+const VERDE = '#22A45D'
+const TINTA = '#0F1B13'
+const PAPEL = '#F0EDE6'
+
+const inputClass = "w-full bg-white border border-black/10 rounded-xl px-4 py-3 text-sm placeholder-[#B0A89E] focus:outline-none focus:border-[#EF4D28] transition-colors"
+const labelClass = "block text-sm font-medium mb-1.5"
 
 export default function NewListingPage() {
   const router = useRouter()
   const supabase = createClient()
 
+  const [checkingAuth, setCheckingAuth] = useState(true)
   const [images, setImages] = useState<File[]>([])
   const [previews, setPreviews] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [categories, setCategories] = useState<any[]>([])
+  const [success, setSuccess] = useState(false)
 
   const [form, setForm] = useState({
     title: '',
@@ -32,22 +42,25 @@ export default function NewListingPage() {
     whatsapp: '',
   })
 
-  // Load categories + pre-fill WhatsApp from profile
   useEffect(() => {
     const init = async () => {
-      const [{ data: cats }, { data: { user } }] = await Promise.all([
-        supabase.from('categories').select('*').eq('is_active', true).order('sort_order'),
-        supabase.auth.getUser(),
-      ])
-      setCategories(cats ?? [])
+      const { data: { user } } = await supabase.auth.getUser()
 
-      if (user) {
-        const { data: profile } = await supabase
-          .from('profiles').select('whatsapp').eq('id', user.id).single()
-        if (profile?.whatsapp) {
-          setForm(f => ({ ...f, whatsapp: profile.whatsapp }))
-        }
+      // Si no está autenticado → redirigir a signup
+      if (!user) {
+        router.replace('/auth/signup?redirect=/listings/new')
+        return
       }
+
+      setCheckingAuth(false)
+
+      const [{ data: cats }, { data: profile }] = await Promise.all([
+        supabase.from('categories').select('*').eq('is_active', true).order('sort_order'),
+        supabase.from('profiles').select('whatsapp').eq('id', user.id).single(),
+      ])
+
+      setCategories(cats ?? [])
+      if (profile?.whatsapp) setForm(f => ({ ...f, whatsapp: profile.whatsapp }))
     }
     init()
   }, [])
@@ -56,8 +69,7 @@ export default function NewListingPage() {
     const files = Array.from(e.target.files ?? []).slice(0, 3 - images.length)
     const compressed = await Promise.all(files.map(f => compressImage(f, 300)))
     setImages(prev => [...prev, ...compressed].slice(0, 3))
-    const newPreviews = compressed.map(f => URL.createObjectURL(f))
-    setPreviews(prev => [...prev, ...newPreviews].slice(0, 3))
+    setPreviews(prev => [...prev, ...compressed.map(f => URL.createObjectURL(f))].slice(0, 3))
   }
 
   const removeImage = (idx: number) => {
@@ -89,8 +101,7 @@ export default function NewListingPage() {
           is_urgent: form.is_urgent,
           pickup_only: form.pickup_only,
         })
-        .select()
-        .single()
+        .select().single()
 
       if (lErr) throw lErr
 
@@ -103,15 +114,11 @@ export default function NewListingPage() {
         const { data: uploaded } = await supabase.storage
           .from('listing-images')
           .upload(path, images[i], { contentType: 'image/jpeg', upsert: true })
-
         if (uploaded) {
           const { data: { publicUrl } } = supabase.storage.from('listing-images').getPublicUrl(path)
           await supabase.from('listing_images').insert({
-            listing_id: listing.id,
-            url: publicUrl,
-            storage_path: path,
-            is_cover: i === 0,
-            sort_order: i,
+            listing_id: listing.id, url: publicUrl, storage_path: path,
+            is_cover: i === 0, sort_order: i,
           })
         }
       }
@@ -124,39 +131,55 @@ export default function NewListingPage() {
   }
 
   const set = (k: string, v: any) => setForm(p => ({ ...p, [k]: v }))
-
   const emergencyCategories = categories.filter(c => c.type === 'emergency')
-  const commercialCategories = categories.filter(c => c.type !== 'emergency')
+  const generalCategories = categories.filter(c => c.type !== 'emergency')
+
+  // Cargando auth check
+  if (checkingAuth) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: PAPEL }}>
+        <Loader2 className="w-6 h-6 animate-spin" style={{ color: CORAL }} />
+      </div>
+    )
+  }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
-      <header className="sticky top-0 z-10 bg-[#0a0a0a]/95 backdrop-blur border-b border-white/5 px-4 h-14 flex items-center gap-3">
-        <BackButton />
-        <h1 className="font-bold text-gray-100">Nueva publicación</h1>
+    <div className="min-h-screen" style={{ backgroundColor: PAPEL }}>
+      {/* Header */}
+      <header className="sticky top-0 z-10 bg-white/95 backdrop-blur border-b border-black/8 px-4 h-14 flex items-center gap-3">
+        <Link href="/feed" className="p-2 -ml-2 hover:opacity-70 transition-opacity" style={{ color: '#6B7280' }}>
+          <ArrowLeft className="w-5 h-5" />
+        </Link>
+        <h1 className="font-bold text-base" style={{ color: TINTA }}>Nueva publicación</h1>
       </header>
 
-      <form onSubmit={handleSubmit} className="max-w-2xl mx-auto px-4 py-6 pb-10 space-y-5">
+      <form onSubmit={handleSubmit} className="max-w-lg mx-auto px-4 py-6 pb-16 space-y-5">
 
         {/* Fotos */}
-        <div>
-          <label className="block text-sm font-medium text-gray-400 mb-2">
-            Fotos <span className="text-gray-600">(máx 3)</span>
+        <div className="bg-white rounded-2xl p-4 border border-black/8">
+          <label className={labelClass} style={{ color: '#6B7280' }}>
+            Fotos <span style={{ color: '#B0A89E' }}>(máx 3)</span>
           </label>
-          <div className="flex gap-3">
+          <div className="flex gap-3 mt-2">
             {previews.map((src, i) => (
-              <div key={i} className="relative w-24 h-24 rounded-xl overflow-hidden border border-white/10">
+              <div key={i} className="relative w-24 h-24 rounded-xl overflow-hidden border border-black/10 shrink-0">
                 <img src={src} alt="" className="object-cover w-full h-full" />
                 <button type="button" onClick={() => removeImage(i)}
-                  className="absolute top-1 right-1 bg-black/60 rounded-full p-0.5 cursor-pointer">
+                  className="absolute top-1 right-1 bg-black/50 rounded-full p-0.5">
                   <X className="w-3.5 h-3.5 text-white" />
                 </button>
-                {i === 0 && <span className="absolute bottom-1 left-1 text-[9px] bg-green-600 text-white px-1 rounded">PORTADA</span>}
+                {i === 0 && (
+                  <span className="absolute bottom-1 left-1 text-[9px] text-white font-bold px-1.5 py-0.5 rounded" style={{ backgroundColor: VERDE }}>
+                    PORTADA
+                  </span>
+                )}
               </div>
             ))}
             {images.length < 3 && (
-              <label className="w-24 h-24 rounded-xl border-2 border-dashed border-white/10 flex flex-col items-center justify-center cursor-pointer hover:border-green-600 transition-colors">
-                <Camera className="w-6 h-6 text-gray-500" />
-                <span className="text-[11px] text-gray-500 mt-1">Agregar</span>
+              <label className="w-24 h-24 rounded-xl border-2 border-dashed flex flex-col items-center justify-center cursor-pointer hover:opacity-70 transition-opacity shrink-0"
+                style={{ borderColor: 'rgba(0,0,0,0.15)' }}>
+                <Camera className="w-6 h-6" style={{ color: '#9CA3AF' }} />
+                <span className="text-[11px] mt-1" style={{ color: '#9CA3AF' }}>Agregar</span>
                 <input type="file" accept="image/*" multiple className="hidden" onChange={handleImageChange} />
               </label>
             )}
@@ -164,62 +187,83 @@ export default function NewListingPage() {
         </div>
 
         {/* Título */}
-        <div>
-          <label className="block text-sm font-medium text-gray-400 mb-1.5">Título *</label>
+        <div className="bg-white rounded-2xl p-4 border border-black/8">
+          <label className={labelClass} style={{ color: '#6B7280' }}>Título *</label>
           <input required value={form.title} onChange={e => set('title', e.target.value)}
             placeholder="¿Qué estás publicando?"
-            className="w-full bg-[#1a1a1a] border border-white/10 rounded-xl px-4 py-3 text-gray-100 placeholder-gray-600 focus:outline-none focus:border-[#EF4D28] transition-colors" />
+            className={inputClass} style={{ color: TINTA }} />
         </div>
 
-        {/* Categoría dinámica */}
-        <div>
-          <label className="block text-sm font-medium text-gray-400 mb-2">Categoría *</label>
+        {/* Categoría */}
+        <div className="bg-white rounded-2xl p-4 border border-black/8">
+          <label className={labelClass} style={{ color: '#6B7280' }}>Categoría *</label>
+
           {emergencyCategories.length > 0 && (
-            <>
-              <p className="text-xs text-red-400 mb-2 font-medium">— Emergencia —</p>
-              <div className="grid grid-cols-2 gap-2 mb-3">
+            <div className="mb-3">
+              <p className="text-xs font-semibold mb-2 uppercase tracking-wide" style={{ color: CORAL }}>
+                Emergencia
+              </p>
+              <div className="grid grid-cols-2 gap-2">
                 {emergencyCategories.map(c => (
                   <button key={c.id} type="button" onClick={() => set('category_id', String(c.id))}
-                    className={`px-3 py-2 rounded-xl text-sm text-left border transition-all cursor-pointer ${form.category_id === String(c.id) ? 'border-[#EF4D28] bg-[#EF4D28]/10 text-[#EF4D28]' : 'border-white/10 bg-[#1a1a1a] text-gray-400 hover:border-white/20'}`}>
-                    {c.name}
+                    className="px-3 py-2.5 rounded-xl text-sm text-left border transition-all"
+                    style={{
+                      backgroundColor: form.category_id === String(c.id) ? '#FDEEE9' : '#F9F7F4',
+                      borderColor: form.category_id === String(c.id) ? CORAL : 'rgba(0,0,0,0.08)',
+                      color: form.category_id === String(c.id) ? CORAL : '#6B7280',
+                      fontWeight: form.category_id === String(c.id) ? 600 : 400,
+                    }}>
+                    {c.icon} {c.name}
                   </button>
                 ))}
               </div>
-            </>
+            </div>
           )}
-          {commercialCategories.length > 0 && (
-            <>
-              <p className="text-xs text-gray-500 mb-2 font-medium">— General —</p>
+
+          {generalCategories.length > 0 && (
+            <div>
+              <p className="text-xs font-semibold mb-2 uppercase tracking-wide" style={{ color: '#9CA3AF' }}>General</p>
               <div className="grid grid-cols-2 gap-2">
-                {commercialCategories.map(c => (
+                {generalCategories.map(c => (
                   <button key={c.id} type="button" onClick={() => set('category_id', String(c.id))}
-                    className={`px-3 py-2 rounded-xl text-sm text-left border transition-all cursor-pointer ${form.category_id === String(c.id) ? 'border-white/40 bg-white/10 text-white' : 'border-white/10 bg-[#1a1a1a] text-gray-400 hover:border-white/20'}`}>
-                    {c.name}
+                    className="px-3 py-2.5 rounded-xl text-sm text-left border transition-all"
+                    style={{
+                      backgroundColor: form.category_id === String(c.id) ? '#F0EDE6' : '#F9F7F4',
+                      borderColor: form.category_id === String(c.id) ? TINTA : 'rgba(0,0,0,0.08)',
+                      color: form.category_id === String(c.id) ? TINTA : '#6B7280',
+                      fontWeight: form.category_id === String(c.id) ? 600 : 400,
+                    }}>
+                    {c.icon} {c.name}
                   </button>
                 ))}
               </div>
-            </>
+            </div>
           )}
         </div>
 
         {/* Precio */}
-        <div>
-          <label className="block text-sm font-medium text-gray-400 mb-1.5">Precio (USD)</label>
+        <div className="bg-white rounded-2xl p-4 border border-black/8">
+          <label className={labelClass} style={{ color: '#6B7280' }}>Precio (USD)</label>
           <div className="relative">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-medium" style={{ color: '#9CA3AF' }}>$</span>
             <input type="number" min="0" step="0.5" value={form.price} onChange={e => set('price', e.target.value)}
               placeholder="0 = Gratis / Donación"
-              className="w-full bg-[#1a1a1a] border border-white/10 rounded-xl pl-8 pr-4 py-3 text-gray-100 placeholder-gray-600 focus:outline-none focus:border-[#EF4D28] transition-colors" />
+              className={`${inputClass} pl-8`} style={{ color: TINTA }} />
           </div>
         </div>
 
         {/* Condición */}
-        <div>
-          <label className="block text-sm font-medium text-gray-400 mb-2">Condición</label>
+        <div className="bg-white rounded-2xl p-4 border border-black/8">
+          <label className={labelClass} style={{ color: '#6B7280' }}>Condición</label>
           <div className="flex flex-wrap gap-2">
             {Object.entries(CONDITIONS).map(([k, v]) => (
               <button key={k} type="button" onClick={() => set('condition', k)}
-                className={`px-3 py-1.5 rounded-full text-sm border transition-all cursor-pointer ${form.condition === k ? 'border-[#EF4D28] bg-[#EF4D28]/10 text-[#EF4D28]' : 'border-white/10 bg-[#1a1a1a] text-gray-400 hover:border-white/20'}`}>
+                className="px-4 py-1.5 rounded-full text-sm border transition-all"
+                style={{
+                  backgroundColor: form.condition === k ? TINTA : 'transparent',
+                  borderColor: form.condition === k ? TINTA : 'rgba(0,0,0,0.12)',
+                  color: form.condition === k ? 'white' : '#6B7280',
+                }}>
                 {v}
               </button>
             ))}
@@ -227,85 +271,90 @@ export default function NewListingPage() {
         </div>
 
         {/* Descripción */}
-        <div>
-          <label className="block text-sm font-medium text-gray-400 mb-1.5">Descripción</label>
+        <div className="bg-white rounded-2xl p-4 border border-black/8">
+          <label className={labelClass} style={{ color: '#6B7280' }}>Descripción</label>
           <textarea rows={3} value={form.description} onChange={e => set('description', e.target.value)}
-            placeholder="Describe el artículo, su estado..."
-            className="w-full bg-[#1a1a1a] border border-white/10 rounded-xl px-4 py-3 text-gray-100 placeholder-gray-600 focus:outline-none focus:border-[#EF4D28] transition-colors resize-none" />
+            placeholder="Describe el artículo, su estado, por qué lo vendes..."
+            className={`${inputClass} resize-none`} style={{ color: TINTA }} />
         </div>
 
         {/* Ubicación */}
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <label className="block text-sm font-medium text-gray-400 mb-1.5">Estado *</label>
-            <select value={form.state} onChange={e => { set('state', e.target.value); set('city', '') }}
-              className="w-full bg-[#1a1a1a] border border-white/10 rounded-xl px-4 py-3 text-gray-100 focus:outline-none focus:border-[#EF4D28] transition-colors">
-              <option value="">Selecciona...</option>
-              {VENEZUELA_STATES.map(s => <option key={s} value={s}>{s}</option>)}
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-400 mb-1.5">Ciudad</label>
-            {form.state && CITIES_BY_STATE[form.state] ? (
-              <select value={form.city} onChange={e => set('city', e.target.value)}
-                className="w-full bg-[#1a1a1a] border border-white/10 rounded-xl px-4 py-3 text-gray-100 focus:outline-none focus:border-[#EF4D28] transition-colors">
+        <div className="bg-white rounded-2xl p-4 border border-black/8">
+          <label className={labelClass} style={{ color: '#6B7280' }}>Ubicación *</label>
+          <div className="grid grid-cols-2 gap-3 mb-3">
+            <div>
+              <p className="text-xs mb-1" style={{ color: '#9CA3AF' }}>Estado</p>
+              <select required value={form.state} onChange={e => { set('state', e.target.value); set('city', '') }}
+                className={inputClass} style={{ color: form.state ? TINTA : '#B0A89E' }}>
                 <option value="">Selecciona...</option>
-                {CITIES_BY_STATE[form.state].map(c => <option key={c} value={c}>{c}</option>)}
+                {VENEZUELA_STATES.map(s => <option key={s} value={s}>{s}</option>)}
               </select>
-            ) : (
-              <input value={form.city} onChange={e => set('city', e.target.value)} placeholder="Tu ciudad"
-                className="w-full bg-[#1a1a1a] border border-white/10 rounded-xl px-4 py-3 text-gray-100 placeholder-gray-600 focus:outline-none focus:border-[#EF4D28] transition-colors" />
-            )}
+            </div>
+            <div>
+              <p className="text-xs mb-1" style={{ color: '#9CA3AF' }}>Ciudad</p>
+              {form.state && CITIES_BY_STATE[form.state] ? (
+                <select value={form.city} onChange={e => set('city', e.target.value)}
+                  className={inputClass} style={{ color: form.city ? TINTA : '#B0A89E' }}>
+                  <option value="">Selecciona...</option>
+                  {CITIES_BY_STATE[form.state].map(c => <option key={c} value={c}>{c}</option>)}
+                </select>
+              ) : (
+                <input value={form.city} onChange={e => set('city', e.target.value)}
+                  placeholder="Tu ciudad" className={inputClass} style={{ color: TINTA }} />
+              )}
+            </div>
           </div>
-        </div>
-
-        {/* Punto de referencia */}
-        <div>
-          <label className="block text-sm font-medium text-gray-400 mb-1.5">
-            Punto de referencia <span className="text-gray-600">(sin dirección exacta)</span>
-          </label>
           <input value={form.address_hint} onChange={e => set('address_hint', e.target.value)}
-            placeholder="Cerca del CC Sambil, zona norte..."
-            className="w-full bg-[#1a1a1a] border border-white/10 rounded-xl px-4 py-3 text-gray-100 placeholder-gray-600 focus:outline-none focus:border-[#EF4D28] transition-colors" />
+            placeholder="Punto de referencia (ej: cerca del CC Sambil, zona norte)"
+            className={inputClass} style={{ color: TINTA }} />
         </div>
 
-        {/* WhatsApp pre-rellenado */}
-        <div>
-          <label className="block text-sm font-medium text-gray-400 mb-1.5">
-            Tu WhatsApp <span className="text-gray-600">(con código de país)</span>
+        {/* WhatsApp */}
+        <div className="bg-white rounded-2xl p-4 border border-black/8">
+          <label className={labelClass} style={{ color: '#6B7280' }}>
+            Tu WhatsApp <span style={{ color: '#B0A89E' }}>(con código de país)</span>
           </label>
           <div className="relative">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-sm">+</span>
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm" style={{ color: '#9CA3AF' }}>+</span>
             <input type="tel" value={form.whatsapp} onChange={e => set('whatsapp', e.target.value)}
               placeholder="58 412 123 4567"
-              className="w-full bg-[#1a1a1a] border border-white/10 rounded-xl pl-7 pr-4 py-3 text-gray-100 placeholder-gray-600 focus:outline-none focus:border-[#EF4D28] transition-colors" />
+              className={`${inputClass} pl-8`} style={{ color: TINTA }} />
           </div>
-          <p className="text-xs text-gray-600 mt-1">Los compradores te contactarán aquí</p>
+          <p className="text-xs mt-1.5" style={{ color: '#9CA3AF' }}>Los compradores te contactarán aquí directamente</p>
         </div>
 
-        {/* Toggles */}
-        <div className="space-y-3">
+        {/* Opciones */}
+        <div className="bg-white rounded-2xl p-4 border border-black/8 space-y-4">
           {[
-            { key: 'is_urgent', label: 'Marcar como urgente', color: form.is_urgent ? 'bg-red-500' : 'bg-[#2a2a2a]' },
-            { key: 'pickup_only', label: 'Solo recogida en persona', color: form.pickup_only ? 'bg-green-500' : 'bg-[#2a2a2a]' },
-          ].map(({ key, label, color }) => (
+            { key: 'is_urgent', label: 'Marcar como urgente', sub: 'Aparece destacado en los resultados', activeColor: CORAL },
+            { key: 'pickup_only', label: 'Solo recogida en persona', sub: 'No hay envío disponible', activeColor: VERDE },
+          ].map(({ key, label, sub, activeColor }) => (
             <label key={key} className="flex items-center gap-3 cursor-pointer">
               <div onClick={() => set(key, !(form as any)[key])}
-                className={`w-11 h-6 rounded-full transition-colors ${color} relative shrink-0`}>
-                <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${(form as any)[key] ? 'translate-x-5' : ''}`} />
+                className="w-11 h-6 rounded-full relative shrink-0 transition-colors"
+                style={{ backgroundColor: (form as any)[key] ? activeColor : '#E5E7EB' }}>
+                <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${(form as any)[key] ? 'translate-x-5' : ''}`} />
               </div>
-              <span className="text-sm text-gray-300">{label}</span>
+              <div>
+                <p className="text-sm font-medium" style={{ color: TINTA }}>{label}</p>
+                <p className="text-xs" style={{ color: '#9CA3AF' }}>{sub}</p>
+              </div>
             </label>
           ))}
         </div>
 
-        {error && <p className="text-red-400 text-sm bg-red-900/20 px-4 py-3 rounded-xl">{error}</p>}
+        {error && (
+          <p className="text-red-600 text-sm bg-red-50 border border-red-100 px-4 py-3 rounded-xl">{error}</p>
+        )}
 
-        <button type="submit" disabled={loading || !form.title || !form.category_id}
-          className="w-full flex items-center justify-center gap-2 bg-green-500 hover:bg-green-400 disabled:opacity-50 disabled:cursor-not-allowed text-black font-bold py-4 rounded-xl transition-colors cursor-pointer">
-          {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : null}
+        <button type="submit"
+          disabled={loading || !form.title || !form.category_id || !form.state}
+          className="w-full flex items-center justify-center gap-2 text-white font-bold py-4 rounded-xl transition-all hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+          style={{ backgroundColor: CORAL }}>
+          {loading && <Loader2 className="w-5 h-5 animate-spin" />}
           {loading ? 'Publicando...' : 'Publicar ahora'}
         </button>
+
       </form>
     </div>
   )
