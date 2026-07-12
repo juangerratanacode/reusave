@@ -5,6 +5,7 @@ import { Search, Plus, X, MapPin, ArrowRight, ShieldCheck, Zap, Users, Star } fr
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { formatPrice, timeAgo } from '@/lib/utils'
+import BottomNav from '@/components/layout/BottomNav'
 
 const CORAL = '#EF4D28'
 const VERDE = '#22A45D'
@@ -79,12 +80,12 @@ export default function LandingPage({ listings, categories, searchParams }: Prop
 
       {/* ── HERO — imagen full width estilo Wallapop ── */}
       <div className="pt-14">
-        <div className="relative w-full" style={{ aspectRatio: '16/7', maxHeight: 480, minHeight: 240 }}>
+        <div className="relative w-full h-64 sm:h-80 lg:h-[440px]">
           <Image
             src="/hero.jpg"
             alt="Compra y vende lo que ya no usas"
             fill
-            className="object-cover object-top"
+            className="object-cover object-center"
             priority
             sizes="100vw"
           />
@@ -367,7 +368,7 @@ export default function LandingPage({ listings, categories, searchParams }: Prop
       </section>
 
       {/* ── FOOTER ── */}
-      <footer className="border-t border-black/8 py-6" style={{ backgroundColor: '#E8E4DC' }}>
+      <footer className="border-t border-black/8 py-6 mb-16 sm:mb-0" style={{ backgroundColor: '#E8E4DC' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-2">
           <span className="font-black text-sm" style={{ color: TINTA }}>
             resuel<span style={{ color: CORAL }}>✓</span>e
@@ -375,6 +376,11 @@ export default function LandingPage({ listings, categories, searchParams }: Prop
           <p className="text-xs" style={{ color: '#B0A89E' }}>entrayresuelve.com · Hecho con ❤️ para Venezuela · 2026</p>
         </div>
       </footer>
+
+      {/* Bottom nav mobile */}
+      <div className="sm:hidden">
+        <BottomNav />
+      </div>
     </div>
   )
 }
