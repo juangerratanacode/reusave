@@ -188,7 +188,7 @@ export default function FilterSheet({ categories, activeCategory }: { categories
             </div>
 
             {/* Footer */}
-            <div className="flex gap-3 px-5 py-4 border-t border-black/5">
+            <div className="flex gap-3 px-5 py-4 border-t border-black/5" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 80px)' }}>
               <button
                 onClick={clear}
                 className="flex-1 py-3.5 rounded-xl border-2 font-bold text-sm transition-all cursor-pointer"

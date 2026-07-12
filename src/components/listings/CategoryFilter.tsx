@@ -16,6 +16,11 @@ export default function CategoryFilter({ categories, active }: { categories: Cat
         style={{ background: 'linear-gradient(to right, transparent, #F5F0E5)' }} />
 
       <div className="flex gap-2.5 overflow-x-auto scrollbar-hide pb-1 sm:flex-wrap">
+        <FilterSheet categories={categories} activeCategory={active} />
+
+        {/* Separador visual */}
+        <div className="w-px bg-black/10 self-stretch mx-1 shrink-0" />
+
         <button
           onClick={() => router.push('/feed')}
           className="shrink-0 text-base font-bold px-5 py-2.5 rounded-full border-2 transition-all whitespace-nowrap cursor-pointer"
@@ -45,11 +50,6 @@ export default function CategoryFilter({ categories, active }: { categories: Cat
             </button>
           )
         })}
-
-        {/* Separador visual */}
-        <div className="w-px bg-black/10 self-stretch mx-1 shrink-0" />
-
-        <FilterSheet categories={categories} activeCategory={active} />
       </div>
     </div>
   )
