@@ -18,7 +18,7 @@ export function formatPrice(price: number, currency = 'USD'): string {
 export function buildWhatsAppLink(phone: string, listingTitle: string, listingUrl: string): string {
   const clean = phone.replace(/\D/g, '')
   const msg = encodeURIComponent(
-    `¡Hola! Vi tu publicación en ReUsa.ve: "${listingTitle}" (${listingUrl}). ¿Sigue disponible?`
+    `¡Hola! Vi tu publicación en Resuelve: "${listingTitle}" (${listingUrl}). ¿Sigue disponible?`
   )
   return `https://wa.me/${clean}?text=${msg}`
 }
