@@ -21,6 +21,7 @@ export default function NewListingPage() {
   const supabase = createClient()
 
   const [checkingAuth, setCheckingAuth] = useState(true)
+  const [needsWhatsapp, setNeedsWhatsapp] = useState(false)
   const [images, setImages] = useState<File[]>([])
   const [previews, setPreviews] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
@@ -52,15 +53,21 @@ export default function NewListingPage() {
         return
       }
 
-      setCheckingAuth(false)
-
       const [{ data: cats }, { data: profile }] = await Promise.all([
         supabase.from('categories').select('*').eq('is_active', true).order('sort_order'),
         supabase.from('profiles').select('whatsapp').eq('id', user.id).single(),
       ])
 
       setCategories(cats ?? [])
-      if (profile?.whatsapp) setForm(f => ({ ...f, whatsapp: profile.whatsapp }))
+
+      if (!profile?.whatsapp) {
+        setNeedsWhatsapp(true)
+        setCheckingAuth(false)
+        return
+      }
+
+      setForm(f => ({ ...f, whatsapp: profile.whatsapp }))
+      setCheckingAuth(false)
     }
     init()
   }, [])
@@ -134,11 +141,39 @@ export default function NewListingPage() {
   const emergencyCategories = categories.filter(c => c.type === 'emergency')
   const generalCategories = categories.filter(c => c.type !== 'emergency')
 
-  // Cargando auth check
   if (checkingAuth) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: PAPEL }}>
         <Loader2 className="w-6 h-6 animate-spin" style={{ color: CORAL }} />
+      </div>
+    )
+  }
+
+  if (needsWhatsapp) {
+    return (
+      <div className="min-h-screen" style={{ backgroundColor: PAPEL }}>
+        <header className="sticky top-0 z-10 bg-white/95 backdrop-blur border-b border-black/8 px-4 h-14 flex items-center gap-3">
+          <Link href="/feed" className="p-2 -ml-2 hover:opacity-70 transition-opacity" style={{ color: '#6B7280' }}>
+            <ArrowLeft className="w-5 h-5" />
+          </Link>
+          <h1 className="font-bold text-base" style={{ color: TINTA }}>Nueva publicación</h1>
+        </header>
+        <div className="flex flex-col items-center justify-center px-6 py-20 text-center">
+          <div className="w-16 h-16 rounded-2xl bg-white border border-black/8 flex items-center justify-center mb-5 text-3xl">
+            📱
+          </div>
+          <h2 className="text-xl font-bold mb-2" style={{ color: TINTA }}>Necesitas agregar tu WhatsApp</h2>
+          <p className="text-sm mb-8 max-w-xs" style={{ color: '#6B7280' }}>
+            Los compradores te contactarán por WhatsApp. Agrégalo en tu perfil antes de publicar.
+          </p>
+          <Link
+            href="/profile/settings"
+            className="w-full max-w-xs flex items-center justify-center gap-2 text-white font-bold py-4 rounded-xl transition-all hover:opacity-90"
+            style={{ backgroundColor: CORAL }}
+          >
+            Ir a editar perfil
+          </Link>
+        </div>
       </div>
     )
   }
@@ -307,20 +342,6 @@ export default function NewListingPage() {
           <input value={form.address_hint} onChange={e => set('address_hint', e.target.value)}
             placeholder="Punto de referencia (ej: cerca del CC Sambil, zona norte)"
             className={inputClass} style={{ color: TINTA }} />
-        </div>
-
-        {/* WhatsApp */}
-        <div className="bg-white rounded-2xl p-4 border border-black/8">
-          <label className={labelClass} style={{ color: '#6B7280' }}>
-            Tu WhatsApp <span style={{ color: '#B0A89E' }}>(con código de país)</span>
-          </label>
-          <div className="relative">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm" style={{ color: '#9CA3AF' }}>+</span>
-            <input type="tel" value={form.whatsapp} onChange={e => set('whatsapp', e.target.value)}
-              placeholder="58 412 123 4567"
-              className={`${inputClass} pl-8`} style={{ color: TINTA }} />
-          </div>
-          <p className="text-xs mt-1.5" style={{ color: '#9CA3AF' }}>Los compradores te contactarán aquí directamente</p>
         </div>
 
         {/* Opciones */}
