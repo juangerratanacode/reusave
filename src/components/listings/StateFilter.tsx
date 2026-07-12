@@ -45,7 +45,7 @@ export default function StateFilter({ activeState }: { activeState?: string }) {
         className={cn(
           'flex items-center gap-2 px-3.5 py-2 rounded-full text-sm font-semibold border transition-all duration-150 cursor-pointer',
           activeState
-            ? 'bg-blue-600 border-blue-600 text-white'
+            ? 'bg-[#EF4D28] border-[#EF4D28] text-white'
             : 'bg-transparent border-white/10 text-gray-400 hover:border-white/25 hover:text-gray-200'
         )}
       >
@@ -77,7 +77,7 @@ export default function StateFilter({ activeState }: { activeState?: string }) {
                 value={query}
                 onChange={e => setQuery(e.target.value)}
                 placeholder="Buscar estado..."
-                className="w-full bg-[#111] border border-white/10 rounded-xl pl-8 pr-3 py-2 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-green-500 transition-colors"
+                className="w-full bg-[#111] border border-white/10 rounded-xl pl-8 pr-3 py-2 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-[#EF4D28] transition-colors"
               />
             </div>
           </div>
@@ -88,7 +88,7 @@ export default function StateFilter({ activeState }: { activeState?: string }) {
               onClick={() => handleSelect('')}
               className={cn(
                 'w-full flex items-center gap-2 px-4 py-2.5 text-sm text-left transition-colors cursor-pointer hover:bg-white/5',
-                !activeState ? 'text-green-400 font-semibold' : 'text-gray-300'
+                !activeState ? 'text-[#EF4D28] font-semibold' : 'text-gray-300'
               )}
             >
               <MapPin className="w-3.5 h-3.5 shrink-0" />
@@ -105,7 +105,7 @@ export default function StateFilter({ activeState }: { activeState?: string }) {
                 onClick={() => handleSelect(state)}
                 className={cn(
                   'w-full flex items-center gap-2 px-4 py-2.5 text-sm text-left transition-colors cursor-pointer hover:bg-white/5',
-                  activeState === state ? 'text-green-400 font-semibold bg-green-500/10' : 'text-gray-300'
+                  activeState === state ? 'text-[#EF4D28] font-semibold bg-[#EF4D28]/10' : 'text-gray-300'
                 )}
               >
                 <span className={cn('w-1.5 h-1.5 rounded-full shrink-0', activeState === state ? 'bg-green-400' : 'bg-transparent')} />

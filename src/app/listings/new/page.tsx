@@ -168,7 +168,7 @@ export default function NewListingPage() {
           <label className="block text-sm font-medium text-gray-400 mb-1.5">Título *</label>
           <input required value={form.title} onChange={e => set('title', e.target.value)}
             placeholder="¿Qué estás publicando?"
-            className="w-full bg-[#1a1a1a] border border-white/10 rounded-xl px-4 py-3 text-gray-100 placeholder-gray-600 focus:outline-none focus:border-green-500 transition-colors" />
+            className="w-full bg-[#1a1a1a] border border-white/10 rounded-xl px-4 py-3 text-gray-100 placeholder-gray-600 focus:outline-none focus:border-[#EF4D28] transition-colors" />
         </div>
 
         {/* Categoría dinámica */}
@@ -180,7 +180,7 @@ export default function NewListingPage() {
               <div className="grid grid-cols-2 gap-2 mb-3">
                 {emergencyCategories.map(c => (
                   <button key={c.id} type="button" onClick={() => set('category_id', String(c.id))}
-                    className={`px-3 py-2 rounded-xl text-sm text-left border transition-all cursor-pointer ${form.category_id === String(c.id) ? 'border-green-500 bg-green-500/10 text-green-300' : 'border-white/10 bg-[#1a1a1a] text-gray-400 hover:border-white/20'}`}>
+                    className={`px-3 py-2 rounded-xl text-sm text-left border transition-all cursor-pointer ${form.category_id === String(c.id) ? 'border-[#EF4D28] bg-[#EF4D28]/10 text-[#EF4D28]' : 'border-white/10 bg-[#1a1a1a] text-gray-400 hover:border-white/20'}`}>
                     {c.name}
                   </button>
                 ))}
@@ -209,7 +209,7 @@ export default function NewListingPage() {
             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">$</span>
             <input type="number" min="0" step="0.5" value={form.price} onChange={e => set('price', e.target.value)}
               placeholder="0 = Gratis / Donación"
-              className="w-full bg-[#1a1a1a] border border-white/10 rounded-xl pl-8 pr-4 py-3 text-gray-100 placeholder-gray-600 focus:outline-none focus:border-green-500 transition-colors" />
+              className="w-full bg-[#1a1a1a] border border-white/10 rounded-xl pl-8 pr-4 py-3 text-gray-100 placeholder-gray-600 focus:outline-none focus:border-[#EF4D28] transition-colors" />
           </div>
         </div>
 
@@ -219,7 +219,7 @@ export default function NewListingPage() {
           <div className="flex flex-wrap gap-2">
             {Object.entries(CONDITIONS).map(([k, v]) => (
               <button key={k} type="button" onClick={() => set('condition', k)}
-                className={`px-3 py-1.5 rounded-full text-sm border transition-all cursor-pointer ${form.condition === k ? 'border-green-500 bg-green-500/10 text-green-300' : 'border-white/10 bg-[#1a1a1a] text-gray-400 hover:border-white/20'}`}>
+                className={`px-3 py-1.5 rounded-full text-sm border transition-all cursor-pointer ${form.condition === k ? 'border-[#EF4D28] bg-[#EF4D28]/10 text-[#EF4D28]' : 'border-white/10 bg-[#1a1a1a] text-gray-400 hover:border-white/20'}`}>
                 {v}
               </button>
             ))}
@@ -231,7 +231,7 @@ export default function NewListingPage() {
           <label className="block text-sm font-medium text-gray-400 mb-1.5">Descripción</label>
           <textarea rows={3} value={form.description} onChange={e => set('description', e.target.value)}
             placeholder="Describe el artículo, su estado..."
-            className="w-full bg-[#1a1a1a] border border-white/10 rounded-xl px-4 py-3 text-gray-100 placeholder-gray-600 focus:outline-none focus:border-green-500 transition-colors resize-none" />
+            className="w-full bg-[#1a1a1a] border border-white/10 rounded-xl px-4 py-3 text-gray-100 placeholder-gray-600 focus:outline-none focus:border-[#EF4D28] transition-colors resize-none" />
         </div>
 
         {/* Ubicación */}
@@ -239,7 +239,7 @@ export default function NewListingPage() {
           <div>
             <label className="block text-sm font-medium text-gray-400 mb-1.5">Estado *</label>
             <select value={form.state} onChange={e => { set('state', e.target.value); set('city', '') }}
-              className="w-full bg-[#1a1a1a] border border-white/10 rounded-xl px-4 py-3 text-gray-100 focus:outline-none focus:border-green-500 transition-colors">
+              className="w-full bg-[#1a1a1a] border border-white/10 rounded-xl px-4 py-3 text-gray-100 focus:outline-none focus:border-[#EF4D28] transition-colors">
               <option value="">Selecciona...</option>
               {VENEZUELA_STATES.map(s => <option key={s} value={s}>{s}</option>)}
             </select>
@@ -248,13 +248,13 @@ export default function NewListingPage() {
             <label className="block text-sm font-medium text-gray-400 mb-1.5">Ciudad</label>
             {form.state && CITIES_BY_STATE[form.state] ? (
               <select value={form.city} onChange={e => set('city', e.target.value)}
-                className="w-full bg-[#1a1a1a] border border-white/10 rounded-xl px-4 py-3 text-gray-100 focus:outline-none focus:border-green-500 transition-colors">
+                className="w-full bg-[#1a1a1a] border border-white/10 rounded-xl px-4 py-3 text-gray-100 focus:outline-none focus:border-[#EF4D28] transition-colors">
                 <option value="">Selecciona...</option>
                 {CITIES_BY_STATE[form.state].map(c => <option key={c} value={c}>{c}</option>)}
               </select>
             ) : (
               <input value={form.city} onChange={e => set('city', e.target.value)} placeholder="Tu ciudad"
-                className="w-full bg-[#1a1a1a] border border-white/10 rounded-xl px-4 py-3 text-gray-100 placeholder-gray-600 focus:outline-none focus:border-green-500 transition-colors" />
+                className="w-full bg-[#1a1a1a] border border-white/10 rounded-xl px-4 py-3 text-gray-100 placeholder-gray-600 focus:outline-none focus:border-[#EF4D28] transition-colors" />
             )}
           </div>
         </div>
@@ -266,7 +266,7 @@ export default function NewListingPage() {
           </label>
           <input value={form.address_hint} onChange={e => set('address_hint', e.target.value)}
             placeholder="Cerca del CC Sambil, zona norte..."
-            className="w-full bg-[#1a1a1a] border border-white/10 rounded-xl px-4 py-3 text-gray-100 placeholder-gray-600 focus:outline-none focus:border-green-500 transition-colors" />
+            className="w-full bg-[#1a1a1a] border border-white/10 rounded-xl px-4 py-3 text-gray-100 placeholder-gray-600 focus:outline-none focus:border-[#EF4D28] transition-colors" />
         </div>
 
         {/* WhatsApp pre-rellenado */}
@@ -278,7 +278,7 @@ export default function NewListingPage() {
             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-sm">+</span>
             <input type="tel" value={form.whatsapp} onChange={e => set('whatsapp', e.target.value)}
               placeholder="58 412 123 4567"
-              className="w-full bg-[#1a1a1a] border border-white/10 rounded-xl pl-7 pr-4 py-3 text-gray-100 placeholder-gray-600 focus:outline-none focus:border-green-500 transition-colors" />
+              className="w-full bg-[#1a1a1a] border border-white/10 rounded-xl pl-7 pr-4 py-3 text-gray-100 placeholder-gray-600 focus:outline-none focus:border-[#EF4D28] transition-colors" />
           </div>
           <p className="text-xs text-gray-600 mt-1">Los compradores te contactarán aquí</p>
         </div>

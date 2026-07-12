@@ -2,8 +2,12 @@
 import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
-import { ArrowLeft, Send, RotateCcw } from 'lucide-react'
+import { ArrowLeft, Send, RotateCcw, Lock } from 'lucide-react'
 import Link from 'next/link'
+
+const CORAL = '#EF4D28'
+const TINTA = '#0F1B13'
+const PAPEL = '#F0EDE6'
 
 export default function LoginPage() {
   const supabase = createClient()
@@ -11,6 +15,7 @@ export default function LoginPage() {
 
   const [step, setStep] = useState<'email' | 'otp'>('email')
   const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [otp, setOtp] = useState(['', '', '', '', '', ''])
   const [loading, setLoading] = useState(false)
   const [verifying, setVerifying] = useState(false)
@@ -19,14 +24,12 @@ export default function LoginPage() {
 
   const inputRefs = useRef<(HTMLInputElement | null)[]>([])
 
-  // Countdown for resend button
   useEffect(() => {
     if (resendCooldown <= 0) return
     const t = setTimeout(() => setResendCooldown(c => c - 1), 1000)
     return () => clearTimeout(t)
   }, [resendCooldown])
 
-  // Auto-verify when all 6 digits are filled
   useEffect(() => {
     const code = otp.join('')
     if (code.length === 6) verifyOtp(code)
@@ -38,18 +41,31 @@ export default function LoginPage() {
     setLoading(true)
     setError('')
 
+    if (password.trim()) {
+      const { error: pwErr } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password: password.trim(),
+      })
+      setLoading(false)
+      if (pwErr) setError('Correo o contraseña incorrectos.')
+      else router.push('/feed')
+      return
+    }
+
     const { error: err } = await supabase.auth.signInWithOtp({
       email: email.trim(),
-      options: { shouldCreateUser: true },
+      options: {
+        shouldCreateUser: true,
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
+      },
     })
 
     setLoading(false)
     if (err) {
-      setError(err.message || 'Error al enviar el código. Intenta de nuevo.')
+      setError(err.message || 'Error al enviar el enlace. Intenta de nuevo.')
     } else {
       setStep('otp')
       setResendCooldown(60)
-      setTimeout(() => inputRefs.current[0]?.focus(), 100)
     }
   }
 
@@ -74,7 +90,6 @@ export default function LoginPage() {
   }
 
   const handleOtpInput = (idx: number, val: string) => {
-    // Handle paste of full code
     if (val.length > 1) {
       const digits = val.replace(/\D/g, '').slice(0, 6).split('')
       const next = [...otp]
@@ -83,7 +98,6 @@ export default function LoginPage() {
       inputRefs.current[Math.min(digits.length, 5)]?.focus()
       return
     }
-
     const digit = val.replace(/\D/g, '')
     const next = [...otp]
     next[idx] = digit
@@ -106,18 +120,21 @@ export default function LoginPage() {
     if (error) setError('Google no está disponible aún.')
   }
 
+  const inputClass = "w-full bg-white border border-black/10 rounded-xl px-4 py-3 text-sm placeholder-[#B0A89E] focus:outline-none focus:border-[#EF4D28] transition-colors"
+
   return (
-    <div className="min-h-screen bg-[#0a0a0a] flex flex-col">
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: PAPEL }}>
       <header className="px-4 h-14 flex items-center">
         {step === 'otp' ? (
           <button
             onClick={() => { setStep('email'); setOtp(['','','','','','']); setError('') }}
-            className="p-2 -ml-2 text-gray-400 hover:text-white transition-colors cursor-pointer"
+            className="p-2 -ml-2 cursor-pointer transition-opacity hover:opacity-70"
+            style={{ color: '#6B7280' }}
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
         ) : (
-          <Link href="/" className="p-2 -ml-2 text-gray-400 hover:text-white transition-colors">
+          <Link href="/" className="p-2 -ml-2 transition-opacity hover:opacity-70" style={{ color: '#6B7280' }}>
             <ArrowLeft className="w-5 h-5" />
           </Link>
         )}
@@ -127,16 +144,17 @@ export default function LoginPage() {
         <div className="w-full max-w-sm">
 
           <div className="mb-8">
-            <h1 className="text-3xl font-black text-green-400 mb-1">
-              ReUsa<span className="text-gray-600">.ve</span>
+            {/* Logo */}
+            <h1 className="text-3xl font-black mb-1" style={{ color: TINTA }}>
+              resuel<span style={{ color: CORAL }}>✓</span>e
             </h1>
             {step === 'email' ? (
-              <p className="text-gray-500 text-sm">
+              <p className="text-sm" style={{ color: '#6B7280' }}>
                 Ingresa tu correo — si no tienes cuenta, la creamos automáticamente.
               </p>
             ) : (
-              <p className="text-gray-500 text-sm">
-                Enviamos un código de 6 dígitos a <strong className="text-gray-300">{email}</strong>
+              <p className="text-sm" style={{ color: '#6B7280' }}>
+                Enviamos un enlace mágico a <strong style={{ color: TINTA }}>{email}</strong>
               </p>
             )}
           </div>
@@ -145,7 +163,7 @@ export default function LoginPage() {
           {step === 'email' && (
             <form onSubmit={sendOtp} className="space-y-3">
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-1.5">
+                <label className="block text-sm font-medium mb-1.5" style={{ color: '#6B7280' }}>
                   Correo electrónico
                 </label>
                 <input
@@ -155,36 +173,54 @@ export default function LoginPage() {
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   placeholder="tu@correo.com"
-                  className="w-full bg-[#1a1a1a] border border-white/10 rounded-xl px-4 py-3 text-gray-100 placeholder-gray-600 focus:outline-none focus:border-green-500 transition-colors"
+                  className={inputClass}
+                  style={{ color: TINTA }}
+                />
+              </div>
+
+              <div>
+                <label className="flex text-sm font-medium mb-1.5 items-center gap-1.5" style={{ color: '#6B7280' }}>
+                  <Lock className="w-3.5 h-3.5" />
+                  Contraseña <span className="font-normal" style={{ color: '#B0A89E' }}>(opcional)</span>
+                </label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  placeholder="Solo si tienes contraseña configurada"
+                  className={inputClass}
+                  style={{ color: TINTA }}
                 />
               </div>
 
               {error && (
-                <p className="text-red-400 text-sm bg-red-900/20 px-3 py-2 rounded-xl">{error}</p>
+                <p className="text-red-600 text-sm bg-red-50 border border-red-100 px-3 py-2 rounded-xl">{error}</p>
               )}
 
               <button
                 type="submit"
                 disabled={loading || !email.trim()}
-                className="w-full flex items-center justify-center gap-2 bg-green-500 hover:bg-green-400 disabled:opacity-50 disabled:cursor-not-allowed text-black font-bold py-3.5 rounded-xl transition-colors cursor-pointer"
+                className="w-full flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3.5 rounded-xl transition-all cursor-pointer hover:opacity-90"
+                style={{ backgroundColor: CORAL }}
               >
                 <Send className="w-4 h-4" />
-                {loading ? 'Enviando...' : 'Enviar código'}
+                {loading ? 'Entrando...' : password ? 'Entrar' : 'Enviar enlace'}
               </button>
 
               <div className="relative py-2">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-white/5" />
+                  <div className="w-full border-t border-black/8" />
                 </div>
                 <div className="relative flex justify-center">
-                  <span className="text-xs text-gray-600 bg-[#0a0a0a] px-3">o continúa con</span>
+                  <span className="text-xs px-3 bg-[#F0EDE6]" style={{ color: '#B0A89E' }}>o continúa con</span>
                 </div>
               </div>
 
               <button
                 type="button"
                 onClick={handleGoogle}
-                className="w-full flex items-center justify-center gap-2.5 bg-[#1a1a1a] hover:bg-[#222] border border-white/10 text-gray-300 font-medium py-3.5 rounded-xl transition-colors cursor-pointer"
+                className="w-full flex items-center justify-center gap-2.5 bg-white hover:bg-[#F5F2ED] border border-black/10 font-medium py-3.5 rounded-xl transition-colors cursor-pointer"
+                style={{ color: TINTA }}
               >
                 <svg viewBox="0 0 24 24" className="w-5 h-5 shrink-0">
                   <path fill="#4285F4" d="M23.745 12.27c0-.79-.07-1.54-.19-2.27h-11.3v4.51h6.47c-.29 1.48-1.14 2.73-2.4 3.58v3h3.86c2.26-2.09 3.56-5.17 3.56-8.82z"/>
@@ -197,52 +233,36 @@ export default function LoginPage() {
             </form>
           )}
 
-          {/* ── STEP 2: OTP ── */}
+          {/* ── STEP 2: Enlace enviado ── */}
           {step === 'otp' && (
             <div className="space-y-6">
-              {/* 6-digit inputs */}
-              <div className="flex gap-2 justify-center">
-                {otp.map((digit, idx) => (
-                  <input
-                    key={idx}
-                    ref={el => { inputRefs.current[idx] = el }}
-                    type="text"
-                    inputMode="numeric"
-                    maxLength={6}
-                    value={digit}
-                    onChange={e => handleOtpInput(idx, e.target.value)}
-                    onKeyDown={e => handleOtpKeyDown(idx, e)}
-                    disabled={verifying}
-                    className="w-12 h-14 text-center text-xl font-bold bg-[#1a1a1a] border border-white/10 rounded-xl text-gray-100 focus:outline-none focus:border-green-500 focus:bg-[#1f1f1f] transition-colors disabled:opacity-50"
-                  />
-                ))}
+              <div className="bg-white border border-black/8 rounded-2xl p-6 text-center">
+                <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#FDEEE9' }}>
+                  <Send className="w-6 h-6" style={{ color: CORAL }} />
+                </div>
+                <p className="text-sm leading-relaxed" style={{ color: '#6B7280' }}>
+                  Abre tu correo y haz clic en el enlace para entrar. No necesitas copiar ningún código.
+                </p>
               </div>
 
-              {verifying && (
-                <div className="flex items-center justify-center gap-2 text-green-400 text-sm">
-                  <div className="w-4 h-4 border-2 border-green-400 border-t-transparent rounded-full animate-spin" />
-                  Verificando...
-                </div>
-              )}
-
               {error && (
-                <p className="text-red-400 text-sm bg-red-900/20 px-3 py-2 rounded-xl text-center">{error}</p>
+                <p className="text-red-600 text-sm bg-red-50 border border-red-100 px-3 py-2 rounded-xl text-center">{error}</p>
               )}
 
-              {/* Resend */}
               <div className="text-center">
                 {resendCooldown > 0 ? (
-                  <p className="text-sm text-gray-600">
-                    Reenviar código en <span className="text-gray-400 font-semibold tabular-nums">{resendCooldown}s</span>
+                  <p className="text-sm" style={{ color: '#B0A89E' }}>
+                    Reenviar en <span className="font-semibold tabular-nums" style={{ color: TINTA }}>{resendCooldown}s</span>
                   </p>
                 ) : (
                   <button
                     onClick={() => sendOtp()}
                     disabled={loading}
-                    className="flex items-center gap-1.5 text-sm text-green-400 hover:text-green-300 transition-colors cursor-pointer mx-auto disabled:opacity-50"
+                    className="flex items-center gap-1.5 text-sm font-medium transition-opacity cursor-pointer mx-auto disabled:opacity-50 hover:opacity-70"
+                    style={{ color: CORAL }}
                   >
                     <RotateCcw className="w-3.5 h-3.5" />
-                    Reenviar código
+                    Reenviar enlace
                   </button>
                 )}
               </div>

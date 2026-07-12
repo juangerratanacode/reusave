@@ -10,19 +10,14 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Neón verde para donaciones
-        neon: {
-          green: '#22c55e',
-          'green-glow': '#16a34a',
-        },
-        // Naranja para ventas solidarias
-        solidarity: {
-          orange: '#f97316',
-          'orange-dark': '#ea580c',
-        },
-        // Rojo urgente
-        urgent: {
-          red: '#ef4444',
+        // Resuelve brand colors
+        brand: {
+          coral: '#EF4D28',    // Primary CTA, isotipo checkmark
+          'coral-dark': '#D43D1E',
+          verde: '#22A45D',    // Prices, success, secondary
+          'verde-dark': '#1A8249',
+          tinta: '#0F1B13',    // Dark background variant
+          papel: '#F0EDE6',    // Light background / cream
         },
         // Superficie oscura
         surface: {
@@ -31,13 +26,17 @@ const config: Config = {
           border: '#2a2a2a',
           input: '#222222',
         },
+        // Legacy (keep for backward compat)
+        neon: {
+          green: '#22A45D',
+        },
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
       },
       boxShadow: {
-        'neon-green': '0 0 20px rgba(34, 197, 94, 0.3)',
-        'neon-orange': '0 0 20px rgba(249, 115, 22, 0.3)',
+        'brand-coral': '0 0 20px rgba(239, 77, 40, 0.3)',
+        'brand-verde': '0 0 20px rgba(34, 164, 93, 0.3)',
       },
     },
   },

@@ -8,8 +8,8 @@ export default function LandingB() {
 
       {/* Navbar */}
       <header className="px-5 h-14 flex items-center justify-between border-b border-[#1a1a1a]">
-        <span className="font-bold text-xl">
-          <span className="text-green-400">ReUsa</span><span className="text-gray-500">.ve</span>
+        <span className="font-black text-xl text-white">
+          resuel<span style={{ color: '#EF4D28' }}>✓</span>e
         </span>
         <div className="flex items-center gap-3">
           <Link href="/auth/login" className="text-sm text-gray-400 hover:text-white transition-colors">
@@ -17,7 +17,8 @@ export default function LandingB() {
           </Link>
           <Link
             href="/auth/login"
-            className="text-sm bg-green-500 hover:bg-green-400 text-black font-bold px-4 py-2 rounded-full transition-colors"
+            className="text-sm hover:opacity-90 text-white font-bold px-4 py-2 rounded-full transition-colors"
+            style={{ backgroundColor: '#EF4D28' }}
           >
             Registrarse
           </Link>
@@ -33,7 +34,7 @@ export default function LandingB() {
 
         <h1 className="text-4xl font-extrabold leading-tight max-w-sm">
           Lo que no usas,{' '}
-          <span className="text-green-400">alguien lo necesita</span>
+          <span style={{ color: '#22A45D' }}>alguien lo necesita</span>
         </h1>
 
         <p className="mt-4 text-gray-400 text-base max-w-xs leading-relaxed">
@@ -43,7 +44,8 @@ export default function LandingB() {
         <div className="flex flex-col gap-3 mt-8 w-full max-w-xs">
           <Link
             href="/auth/login"
-            className="w-full bg-green-500 hover:bg-green-400 text-black font-bold py-4 rounded-2xl flex items-center justify-center gap-2 transition-colors text-base"
+            className="w-full hover:opacity-90 text-white font-bold py-4 rounded-2xl flex items-center justify-center gap-2 transition-colors text-base"
+            style={{ backgroundColor: '#EF4D28' }}
           >
             Publicar gratis <ArrowRight className="w-5 h-5" />
           </Link>
@@ -142,14 +144,16 @@ export default function LandingB() {
         <p className="text-gray-500 text-sm mb-6">Es gratis. Siempre lo será para publicaciones básicas.</p>
         <Link
           href="/auth/login"
-          className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-400 text-black font-bold px-8 py-4 rounded-2xl transition-colors"
+          className="inline-flex items-center gap-2 hover:opacity-90 text-white font-bold px-8 py-4 rounded-2xl transition-colors"
+          style={{ backgroundColor: '#EF4D28' }}
         >
           Crear cuenta gratis <ArrowRight className="w-5 h-5" />
         </Link>
       </section>
 
       <footer className="text-center py-6 text-xs text-gray-700 border-t border-[#1a1a1a]">
-        ReUsa.ve — Hecho con ❤️ para Venezuela
+        <span className="font-black text-white">resuel<span style={{ color: '#EF4D28' }}>✓</span>e</span>
+        {' '}— Hecho con ❤️ para Venezuela
       </footer>
     </div>
   )
