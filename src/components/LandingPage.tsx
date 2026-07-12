@@ -1,11 +1,7 @@
 'use client'
 import Link from 'next/link'
 import Image from 'next/image'
-import {
-  Search, ArrowRight, MapPin, ShieldCheck, Zap,
-  Smartphone, Shirt, Sofa, Car, Wrench,
-  Heart, Plus, ChevronRight, X, Package
-} from 'lucide-react'
+import { Search, Plus, X, MapPin, ArrowRight, ShieldCheck, Zap, Users, Star } from 'lucide-react'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { formatPrice, timeAgo } from '@/lib/utils'
@@ -14,18 +10,6 @@ const CORAL = '#EF4D28'
 const VERDE = '#22A45D'
 const TINTA = '#0F1B13'
 const PAPEL = '#F0EDE6'
-
-const ICON_MAP: Record<string, any> = {
-  Smartphone, Shirt, Sofa, Car, Wrench, Heart, Package
-}
-
-function Logo({ size = 'text-xl' }: { size?: string }) {
-  return (
-    <span className={`font-black tracking-tight ${size}`} style={{ color: TINTA }}>
-      resuel<span style={{ color: CORAL }}>✓</span>e
-    </span>
-  )
-}
 
 type Props = {
   listings: any[]
@@ -44,24 +28,22 @@ export default function LandingPage({ listings, categories, searchParams }: Prop
     router.push(`/?${params.toString()}`)
   }
 
-  const clearSearch = () => {
-    setQ('')
-    router.push('/')
-  }
-
   const hasFilters = searchParams.q || searchParams.state || searchParams.category
-  const showEmptyState = hasFilters && listings.length === 0
+  const showEmpty = hasFilters && listings.length === 0
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: PAPEL, color: TINTA }}>
+    <div className="min-h-screen" style={{ backgroundColor: PAPEL }}>
 
-      {/* ── NAVBAR — FIXED ── */}
+      {/* ── NAVBAR ── */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-black/8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-3">
-          <Logo />
+          {/* Logo */}
+          <span className="font-black text-lg tracking-tight shrink-0" style={{ color: TINTA }}>
+            resuel<span style={{ color: CORAL }}>✓</span>e
+          </span>
 
-          {/* Search */}
-          <form onSubmit={handleSearch} className="flex-1 max-w-xl relative">
+          {/* Search bar desktop */}
+          <form onSubmit={handleSearch} className="flex-1 max-w-xl relative hidden sm:block">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none" style={{ color: '#9CA3AF' }} />
             <input
               type="text"
@@ -72,7 +54,7 @@ export default function LandingPage({ listings, categories, searchParams }: Prop
               style={{ color: TINTA }}
             />
             {q && (
-              <button type="button" onClick={clearSearch} className="absolute right-3 top-1/2 -translate-y-1/2 hover:opacity-70">
+              <button type="button" onClick={() => { setQ(''); router.push('/') }} className="absolute right-3 top-1/2 -translate-y-1/2 hover:opacity-70">
                 <X className="w-3.5 h-3.5" style={{ color: '#9CA3AF' }} />
               </button>
             )}
@@ -84,207 +66,271 @@ export default function LandingPage({ listings, categories, searchParams }: Prop
             </Link>
             <Link
               href="/auth/signup"
-              className="flex items-center gap-1.5 text-white font-bold text-sm px-4 py-2 rounded-full transition-all hover:opacity-90"
+              className="flex items-center gap-1.5 text-white font-bold text-sm px-4 py-2 rounded-full hover:opacity-90 transition-opacity"
               style={{ backgroundColor: CORAL }}
             >
-              <Plus className="w-4 h-4" />
+              <Plus className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Publicar gratis</span>
-              <span className="sm:hidden">Entrar</span>
+              <span className="sm:hidden">Publicar</span>
             </Link>
           </div>
         </div>
       </header>
 
-      {/* ── HERO ── */}
-      <section className="pt-20 pb-8 px-4 sm:px-6 max-w-7xl mx-auto">
-        {/* Badge emergencia */}
-        <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold mb-6 mt-4" style={{ backgroundColor: '#FDEEE9', color: CORAL, border: `1px solid #FBBFAA` }}>
-          <span className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: CORAL }} />
-          Apoyo solidario post-sismo Venezuela
-        </div>
+      {/* ── HERO — imagen full width estilo Wallapop ── */}
+      <div className="pt-14">
+        <div className="relative w-full" style={{ aspectRatio: '16/7', maxHeight: 480, minHeight: 240 }}>
+          <Image
+            src="/hero.jpg"
+            alt="Compra y vende lo que ya no usas"
+            fill
+            className="object-cover object-top"
+            priority
+            sizes="100vw"
+          />
+          {/* Gradient overlay para legibilidad del texto */}
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(15,27,19,0.72) 0%, rgba(15,27,19,0.3) 60%, transparent 100%)' }} />
 
-        <div className="flex flex-col lg:flex-row lg:items-start gap-8 lg:gap-12">
-          <div className="flex-1 min-w-0">
-            <h1 className="text-4xl sm:text-5xl font-black leading-[1.05] tracking-tight mb-4" style={{ color: TINTA }}>
-              Lo que no usas,{' '}
-              <span style={{ color: VERDE }}>alguien lo necesita</span>
+          {/* Texto sobre la imagen */}
+          <div className="absolute inset-0 flex flex-col justify-center px-6 sm:px-12 max-w-2xl">
+            <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold mb-3 self-start" style={{ backgroundColor: 'rgba(239,77,40,0.9)', color: 'white' }}>
+              <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+              Apoyo post-sismo Venezuela
+            </div>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight mb-3 drop-shadow-sm">
+              Compra y vende<br />
+              <span style={{ color: '#6EE7A0' }}>lo que ya no usas</span>
             </h1>
-            <p className="text-base leading-relaxed mb-6 max-w-lg" style={{ color: '#6B7280' }}>
-              Marketplace de segunda mano para venezolanos. Compra, vende y dona — sin intermediarios, a precios reales.
+            <p className="text-sm sm:text-base text-white/80 mb-5 max-w-sm">
+              El marketplace de segunda mano hecho para Venezuela. Sin comisiones. Sin intermediarios.
             </p>
-
-            {/* Search bar hero (mobile) */}
-            <form onSubmit={handleSearch} className="flex gap-2 mb-4 max-w-xl lg:hidden">
-              <div className="flex-1 relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#9CA3AF' }} />
-                <input
-                  type="text"
-                  value={q}
-                  onChange={e => setQ(e.target.value)}
-                  placeholder="¿Qué estás buscando?"
-                  className="w-full bg-white border border-black/10 rounded-2xl pl-10 pr-4 py-3.5 text-sm placeholder-[#B0A89E] focus:outline-none focus:border-[#EF4D28] transition-colors shadow-sm"
-                  style={{ color: TINTA }}
-                />
-              </div>
-              <button type="submit" className="text-white font-bold px-5 py-3.5 rounded-2xl hover:opacity-90 shrink-0" style={{ backgroundColor: CORAL }}>
-                Buscar
-              </button>
-            </form>
-
-            {/* Stats */}
-            <div className="flex flex-wrap gap-5">
-              {[
-                { num: '24', label: 'estados' },
-                { num: '$0', label: 'para publicar' },
-                { num: '100%', label: 'sin comisiones' },
-              ].map(s => (
-                <div key={s.label} className="flex items-center gap-1.5">
-                  <span className="text-base font-black" style={{ color: CORAL }}>{s.num}</span>
-                  <span className="text-xs" style={{ color: '#9CA3AF' }}>{s.label}</span>
-                </div>
-              ))}
+            <div className="flex gap-2 flex-wrap">
+              <Link
+                href="/auth/signup"
+                className="text-white font-bold px-5 py-2.5 rounded-xl text-sm hover:opacity-90 transition-opacity"
+                style={{ backgroundColor: CORAL }}
+              >
+                Publicar gratis
+              </Link>
+              <Link
+                href="/feed"
+                className="font-bold px-5 py-2.5 rounded-xl text-sm border border-white/40 text-white hover:bg-white/10 transition-colors"
+              >
+                Ver publicaciones
+              </Link>
             </div>
           </div>
+        </div>
+      </div>
 
-          {/* Categories grid desktop */}
-          <div className="hidden lg:grid grid-cols-3 gap-2 w-64 shrink-0">
-            {categories.slice(0, 6).map((cat) => {
-              const IconComp = ICON_MAP[cat.icon] ?? Package
-              return (
-                <button
-                  key={cat.id}
-                  onClick={() => router.push(`/?category=${cat.slug}`)}
-                  className="flex flex-col items-center gap-1.5 p-3 rounded-xl border bg-white hover:shadow-sm transition-all cursor-pointer"
-                  style={{ borderColor: searchParams.category === cat.slug ? CORAL : 'rgba(0,0,0,0.08)' }}
-                >
-                  <span className="text-xl">{cat.icon}</span>
-                  <span className="text-[10px] font-semibold text-center leading-tight" style={{ color: TINTA }}>{cat.name}</span>
-                </button>
-              )
-            })}
+      {/* ── SEARCH MOBILE ── */}
+      <div className="sm:hidden px-4 py-3 bg-white border-b border-black/8">
+        <form onSubmit={handleSearch} className="flex gap-2">
+          <div className="flex-1 relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none" style={{ color: '#9CA3AF' }} />
+            <input
+              type="text"
+              value={q}
+              onChange={e => setQ(e.target.value)}
+              placeholder="¿Qué buscas?"
+              className="w-full bg-[#F5F2ED] border border-black/10 rounded-full pl-9 pr-4 py-2 text-sm placeholder-[#B0A89E] focus:outline-none focus:border-[#EF4D28] transition-colors"
+              style={{ color: TINTA }}
+            />
+          </div>
+          <button type="submit" className="text-white font-bold px-4 py-2 rounded-full text-sm shrink-0 hover:opacity-90" style={{ backgroundColor: CORAL }}>
+            Buscar
+          </button>
+        </form>
+      </div>
+
+      {/* ── STATS BAR ── */}
+      <div className="bg-white border-b border-black/8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-around sm:justify-start sm:gap-10">
+          {[
+            { n: '24', label: 'estados' },
+            { n: '$0', label: 'para publicar' },
+            { n: '0%', label: 'comisión' },
+          ].map(s => (
+            <div key={s.label} className="flex items-baseline gap-1">
+              <span className="text-base font-black" style={{ color: CORAL }}>{s.n}</span>
+              <span className="text-xs" style={{ color: '#9CA3AF' }}>{s.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── CATEGORÍAS ── */}
+      <div className="bg-white border-b border-black/8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
+          <div className="flex gap-2 overflow-x-auto scrollbar-hide">
+            <button
+              onClick={() => router.push('/')}
+              className="shrink-0 text-xs font-semibold px-4 py-1.5 rounded-full border transition-all"
+              style={{
+                backgroundColor: !searchParams.category ? CORAL : 'transparent',
+                color: !searchParams.category ? 'white' : '#6B7280',
+                borderColor: !searchParams.category ? CORAL : 'rgba(0,0,0,0.1)'
+              }}
+            >
+              Todo
+            </button>
+            {categories.map(cat => (
+              <button
+                key={cat.id}
+                onClick={() => router.push(`/?category=${cat.slug}`)}
+                className="shrink-0 text-xs font-semibold px-4 py-1.5 rounded-full border transition-all whitespace-nowrap"
+                style={{
+                  backgroundColor: searchParams.category === cat.slug ? CORAL : 'transparent',
+                  color: searchParams.category === cat.slug ? 'white' : '#6B7280',
+                  borderColor: searchParams.category === cat.slug ? CORAL : 'rgba(0,0,0,0.1)'
+                }}
+              >
+                {cat.icon} {cat.name}
+              </button>
+            ))}
           </div>
         </div>
-      </section>
+      </div>
 
       {/* ── LISTINGS ── */}
-      <section className="px-4 sm:px-6 pb-16 max-w-7xl mx-auto">
+      <section className="py-6 px-4 sm:px-6 max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="font-black text-lg" style={{ color: TINTA }}>
+          <h2 className="font-black text-base" style={{ color: TINTA }}>
             {hasFilters
               ? `${listings.length} resultado${listings.length !== 1 ? 's' : ''}${searchParams.q ? ` para "${searchParams.q}"` : ''}`
-              : 'Publicaciones recientes'
-            }
+              : 'Publicaciones recientes'}
           </h2>
           {hasFilters && (
-            <button onClick={clearSearch} className="text-sm hover:opacity-70 transition-opacity" style={{ color: CORAL }}>
+            <button onClick={() => { setQ(''); router.push('/') }} className="text-xs font-medium hover:opacity-70" style={{ color: CORAL }}>
               Limpiar filtros
             </button>
           )}
         </div>
 
-        {/* Categories mobile */}
-        <div className="flex gap-2 overflow-x-auto pb-3 mb-4 lg:hidden scrollbar-hide">
-          <button
-            onClick={() => router.push('/')}
-            className="shrink-0 text-xs font-semibold px-3 py-1.5 rounded-full border transition-all"
-            style={{
-              backgroundColor: !searchParams.category ? CORAL : 'white',
-              color: !searchParams.category ? 'white' : '#6B7280',
-              borderColor: !searchParams.category ? CORAL : 'rgba(0,0,0,0.1)'
-            }}
-          >
-            Todo
-          </button>
-          {categories.map(cat => (
-            <button
-              key={cat.id}
-              onClick={() => router.push(`/?category=${cat.slug}`)}
-              className="shrink-0 text-xs font-semibold px-3 py-1.5 rounded-full border transition-all whitespace-nowrap"
-              style={{
-                backgroundColor: searchParams.category === cat.slug ? CORAL : 'white',
-                color: searchParams.category === cat.slug ? 'white' : '#6B7280',
-                borderColor: searchParams.category === cat.slug ? CORAL : 'rgba(0,0,0,0.1)'
-              }}
-            >
-              {cat.icon} {cat.name}
-            </button>
-          ))}
-        </div>
-
-        {showEmptyState ? (
-          <div className="flex flex-col items-center justify-center py-20">
-            <div className="w-16 h-16 rounded-2xl bg-white border border-black/8 flex items-center justify-center mb-4">
-              <Package className="w-8 h-8" style={{ color: '#B0A89E' }} />
-            </div>
-            <p className="font-semibold" style={{ color: TINTA }}>No hay resultados</p>
-            <p className="text-sm mt-1" style={{ color: '#9CA3AF' }}>Intenta con otra búsqueda</p>
+        {showEmpty ? (
+          <div className="flex flex-col items-center py-16 text-center">
+            <div className="text-4xl mb-3">🔍</div>
+            <p className="font-semibold" style={{ color: TINTA }}>Sin resultados</p>
+            <p className="text-sm mt-1" style={{ color: '#9CA3AF' }}>Intenta con otra búsqueda o categoría</p>
           </div>
         ) : listings.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3">
-            {listings.map((listing) => {
-              const cover = listing.listing_images?.find((i: any) => i.is_cover) ?? listing.listing_images?.[0]
-              return (
-                <Link key={listing.id} href={`/listings/${listing.id}`} className="block">
-                  <article className="bg-white rounded-xl overflow-hidden border border-black/8 hover:shadow-md transition-all active:scale-95">
-                    <div className="relative aspect-square bg-[#F5F2ED]">
-                      {cover ? (
-                        <Image src={cover.url} alt={listing.title} fill className="object-cover" sizes="(max-width: 640px) 50vw, 200px" />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-3xl">📦</div>
-                      )}
-                      {listing.is_urgent && (
-                        <span className="absolute top-1.5 left-1.5 text-white text-[9px] font-bold px-1.5 py-0.5 rounded" style={{ backgroundColor: CORAL }}>URGENTE</span>
-                      )}
-                    </div>
-                    <div className="p-2.5">
-                      <h3 className="text-sm font-medium line-clamp-2 leading-snug" style={{ color: TINTA }}>{listing.title}</h3>
-                      <p className="text-sm font-bold mt-1" style={{ color: VERDE }}>{formatPrice(listing.price)}</p>
-                      {listing.city && (
-                        <p className="text-[10px] mt-1 flex items-center gap-0.5" style={{ color: '#9CA3AF' }}>
-                          <MapPin className="w-3 h-3" /> {listing.city}
-                        </p>
-                      )}
-                      <p className="text-[10px] mt-0.5" style={{ color: '#B0A89E' }}>{timeAgo(listing.created_at)}</p>
-                    </div>
-                  </article>
-                </Link>
-              )
-            })}
-          </div>
+          <>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+              {listings.map((listing) => {
+                const cover = listing.listing_images?.find((i: any) => i.is_cover) ?? listing.listing_images?.[0]
+                return (
+                  <Link key={listing.id} href={`/listings/${listing.id}`} className="block group">
+                    <article className="bg-white rounded-2xl overflow-hidden border border-black/8 hover:shadow-md transition-all group-active:scale-[0.98]">
+                      <div className="relative aspect-square bg-[#F0EDE6]">
+                        {cover
+                          ? <Image src={cover.url} alt={listing.title} fill className="object-cover" sizes="(max-width:640px) 50vw, 200px" />
+                          : <div className="w-full h-full flex items-center justify-center text-3xl">📦</div>
+                        }
+                        {listing.is_urgent && (
+                          <span className="absolute top-2 left-2 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-md" style={{ backgroundColor: CORAL }}>
+                            URGENTE
+                          </span>
+                        )}
+                      </div>
+                      <div className="p-2.5">
+                        <h3 className="text-sm font-medium line-clamp-2 leading-snug" style={{ color: TINTA }}>{listing.title}</h3>
+                        <p className="text-sm font-black mt-0.5" style={{ color: VERDE }}>{formatPrice(listing.price)}</p>
+                        {listing.city && (
+                          <p className="text-[10px] mt-1 flex items-center gap-0.5" style={{ color: '#B0A89E' }}>
+                            <MapPin className="w-2.5 h-2.5 shrink-0" />{listing.city}
+                          </p>
+                        )}
+                        <p className="text-[10px] mt-0.5" style={{ color: '#C5BDB4' }}>{timeAgo(listing.created_at)}</p>
+                      </div>
+                    </article>
+                  </Link>
+                )
+              })}
+            </div>
+            <div className="text-center mt-7">
+              <Link
+                href="/feed"
+                className="inline-flex items-center gap-2 font-bold px-6 py-3 rounded-xl border border-black/15 hover:border-black/30 transition-colors text-sm"
+                style={{ color: TINTA }}
+              >
+                Ver todas las publicaciones <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </>
         ) : (
-          /* Empty feed — prompt to be first */
-          <div className="flex flex-col items-center justify-center py-20 text-center">
+          <div className="flex flex-col items-center py-16 text-center">
             <div className="text-5xl mb-4">🛍️</div>
             <p className="font-bold text-lg mb-1" style={{ color: TINTA }}>Sé el primero en publicar</p>
-            <p className="text-sm mb-6" style={{ color: '#9CA3AF' }}>La comunidad está esperando artículos como el tuyo.</p>
-            <Link
-              href="/auth/signup"
-              className="text-white font-bold px-6 py-3 rounded-xl hover:opacity-90 transition-opacity"
-              style={{ backgroundColor: CORAL }}
-            >
+            <p className="text-sm mb-5" style={{ color: '#9CA3AF' }}>La comunidad está esperando artículos como el tuyo.</p>
+            <Link href="/auth/signup" className="text-white font-bold px-6 py-3 rounded-xl hover:opacity-90 transition-opacity" style={{ backgroundColor: CORAL }}>
               Publicar ahora — gratis
             </Link>
           </div>
         )}
       </section>
 
-      {/* ── HOW IT WORKS ── */}
-      <section className="py-12 bg-white border-t border-black/8">
+      {/* ── CÓMO FUNCIONA ── */}
+      <section className="py-12 bg-white border-t border-b border-black/8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <h2 className="text-xl font-black mb-8" style={{ color: TINTA }}>¿Cómo funciona?</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <h2 className="text-xl font-black mb-7 text-center" style={{ color: TINTA }}>¿Cómo funciona?</h2>
+          <div className="grid grid-cols-3 gap-4 max-w-2xl mx-auto">
             {[
-              { step: '01', color: VERDE, title: 'Publica en segundos', desc: 'Fotos, descripción y precio. Gratis siempre.' },
-              { step: '02', color: '#2563EB', title: 'Encuentra lo que buscas', desc: 'Busca por categoría o filtra por estado.' },
-              { step: '03', color: CORAL, title: 'Contacta por WhatsApp', desc: 'Sin chat interno. Directo, rápido, seguro.' },
+              { n: '1', emoji: '📸', color: VERDE, title: 'Publica', desc: 'Sube fotos y precio en 2 minutos. Sin costo.' },
+              { n: '2', emoji: '🔍', color: '#2563EB', title: 'Te descubren', desc: 'Compradores buscan por categoría o estado.' },
+              { n: '3', emoji: '💬', color: '#25D366', title: 'Por WhatsApp', desc: 'Contacto directo. Sin intermediarios.' },
             ].map(s => (
-              <div key={s.step} className="flex gap-4 bg-[#F5F2ED] rounded-2xl p-5 border border-black/5">
-                <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 text-white text-sm font-black" style={{ backgroundColor: s.color }}>
-                  {s.step}
+              <div key={s.n} className="flex flex-col items-center text-center">
+                <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl mb-3 shadow-sm" style={{ backgroundColor: `${s.color}18` }}>
+                  {s.emoji}
                 </div>
+                <p className="font-black text-sm mb-1" style={{ color: TINTA }}>{s.title}</p>
+                <p className="text-xs leading-relaxed" style={{ color: '#6B7280' }}>{s.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── POR QUÉ RESUELVE ── */}
+      <section className="py-12 px-4 sm:px-6 max-w-7xl mx-auto">
+        <h2 className="text-xl font-black mb-6 text-center" style={{ color: TINTA }}>Por qué elegirnos</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {[
+            { icon: <Zap className="w-5 h-5" style={{ color: CORAL }} />, bg: '#FDEEE9', title: 'Rápido y simple', desc: 'Publica en menos de 2 minutos desde tu teléfono.' },
+            { icon: <ShieldCheck className="w-5 h-5" style={{ color: VERDE }} />, bg: '#E8F7EF', title: 'Confianza verificada', desc: 'Perfiles con reputación, fotos reales, contacto directo.' },
+            { icon: <Users className="w-5 h-5" style={{ color: '#2563EB' }} />, bg: '#EFF6FF', title: 'Para Venezuela', desc: 'Precios en USD y Bs. Los 24 estados. Sin comisión.' },
+          ].map((item, i) => (
+            <div key={i} className="bg-white rounded-2xl p-5 border border-black/8 flex gap-4 items-start">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: item.bg }}>
+                {item.icon}
+              </div>
+              <div>
+                <p className="font-bold text-sm mb-0.5" style={{ color: TINTA }}>{item.title}</p>
+                <p className="text-xs leading-relaxed" style={{ color: '#6B7280' }}>{item.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── TESTIMONIOS ── */}
+      <section className="py-10 bg-white border-t border-black/8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <h2 className="text-xl font-black mb-6 text-center" style={{ color: TINTA }}>Lo que dice la comunidad</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {[
+              { name: 'María G.', city: 'Caracas', text: 'Vendí ropa que tenía guardada hace años. En un día tenía 3 compradores. Increíble.' },
+              { name: 'Carlos M.', city: 'Maracay', text: 'Encontré una nevera en buen estado a mitad de precio. El contacto por WhatsApp fue directo y fácil.' },
+              { name: 'Luisa R.', city: 'Valencia', text: 'Por fin un Wallapop venezolano. Sin comisiones raras, sin pasos complicados. Así se hace.' },
+            ].map((t, i) => (
+              <div key={i} className="rounded-2xl p-5 border border-black/8" style={{ backgroundColor: PAPEL }}>
+                <div className="flex gap-0.5 mb-3">
+                  {[...Array(5)].map((_, j) => <Star key={j} className="w-3.5 h-3.5 fill-current" style={{ color: '#FBBF24' }} />)}
+                </div>
+                <p className="text-sm leading-relaxed mb-3" style={{ color: '#4B5563' }}>"{t.text}"</p>
                 <div>
-                  <p className="font-bold text-sm mb-1" style={{ color: TINTA }}>{s.title}</p>
-                  <p className="text-xs leading-relaxed" style={{ color: '#6B7280' }}>{s.desc}</p>
+                  <p className="text-xs font-bold" style={{ color: TINTA }}>{t.name}</p>
+                  <p className="text-[10px]" style={{ color: '#9CA3AF' }}>{t.city}</p>
                 </div>
               </div>
             ))}
@@ -293,23 +339,25 @@ export default function LandingPage({ listings, categories, searchParams }: Prop
       </section>
 
       {/* ── CTA FINAL ── */}
-      <section className="py-14 border-t border-black/8" style={{ backgroundColor: PAPEL }}>
-        <div className="max-w-xl mx-auto px-4 text-center">
-          <h2 className="text-2xl font-black mb-2" style={{ color: TINTA }}>
-            Empieza ahora. <span style={{ color: VERDE }}>Es gratis.</span>
+      <section className="py-16 border-t border-black/8" style={{ backgroundColor: PAPEL }}>
+        <div className="max-w-md mx-auto px-4 text-center">
+          <span className="text-3xl mb-4 block">🇻🇪</span>
+          <h2 className="text-2xl sm:text-3xl font-black mb-2 leading-tight" style={{ color: TINTA }}>
+            Empieza hoy.<br />
+            <span style={{ color: VERDE }}>Es gratis, siempre.</span>
           </h2>
-          <p className="text-sm mb-6" style={{ color: '#9CA3AF' }}>Sin tarjeta. Sin pagos. Sin trampa.</p>
+          <p className="text-sm mb-7 mt-2" style={{ color: '#9CA3AF' }}>Sin tarjeta. Sin comisiones. Sin trampa.</p>
           <div className="flex gap-3 justify-center flex-wrap">
             <Link
               href="/auth/signup"
-              className="text-white font-bold px-6 py-3 rounded-xl hover:opacity-90 transition-opacity flex items-center gap-2"
+              className="text-white font-bold px-7 py-3.5 rounded-xl hover:opacity-90 transition-opacity flex items-center gap-2"
               style={{ backgroundColor: CORAL }}
             >
-              Crear cuenta <ArrowRight className="w-4 h-4" />
+              Crear cuenta gratis <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
               href="/auth/login"
-              className="font-bold px-6 py-3 rounded-xl border border-black/15 hover:border-black/30 transition-colors"
+              className="font-bold px-7 py-3.5 rounded-xl border border-black/15 hover:border-black/30 transition-colors"
               style={{ color: TINTA }}
             >
               Ya tengo cuenta
@@ -318,10 +366,13 @@ export default function LandingPage({ listings, categories, searchParams }: Prop
         </div>
       </section>
 
-      <footer className="border-t border-black/8 py-5" style={{ backgroundColor: PAPEL }}>
+      {/* ── FOOTER ── */}
+      <footer className="border-t border-black/8 py-6" style={{ backgroundColor: '#E8E4DC' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <Logo size="text-sm" />
-          <p className="text-xs" style={{ color: '#B0A89E' }}>entrayresuelve.com · Hecho para Venezuela · 2026</p>
+          <span className="font-black text-sm" style={{ color: TINTA }}>
+            resuel<span style={{ color: CORAL }}>✓</span>e
+          </span>
+          <p className="text-xs" style={{ color: '#B0A89E' }}>entrayresuelve.com · Hecho con ❤️ para Venezuela · 2026</p>
         </div>
       </footer>
     </div>
