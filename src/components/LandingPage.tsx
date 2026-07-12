@@ -86,7 +86,7 @@ export default function LandingPage({ listings, categories, searchParams }: Prop
             alt="Compra y vende lo que ya no usas"
             fill
             className="object-cover"
-            style={{ objectPosition: '50% 15%' }}
+            style={{ objectPosition: 'center top' }}
             priority
             sizes="100vw"
           />
@@ -164,10 +164,12 @@ export default function LandingPage({ listings, categories, searchParams }: Prop
       {/* ── CATEGORÍAS ── */}
       <div className="bg-white border-b border-black/8">
         <div className="max-w-7xl mx-auto py-3 relative">
-          {/* Degradado derecho — hint visual de que hay más */}
-          <div className="absolute right-0 top-0 bottom-0 w-12 z-10 pointer-events-none sm:hidden"
+          {/* Degradado hint solo en mobile */}
+          <div className="absolute right-0 top-0 bottom-0 w-10 z-10 pointer-events-none sm:hidden"
             style={{ background: 'linear-gradient(to right, transparent, white)' }} />
-          <div className="flex gap-2 overflow-x-auto scrollbar-hide px-4 sm:px-6">
+
+          {/* Mobile: scroll horizontal | Desktop: wrap en varias filas */}
+          <div className="flex gap-2 px-4 sm:px-6 overflow-x-auto scrollbar-hide sm:overflow-x-visible sm:flex-wrap">
             <button
               onClick={() => router.push('/')}
               className="shrink-0 text-xs font-semibold px-4 py-1.5 rounded-full border transition-all"
