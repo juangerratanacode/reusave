@@ -5,6 +5,10 @@ import { VENEZUELA_STATES } from '@/lib/venezuela'
 import { MapPin, ChevronDown, X, Search } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
+const CORAL = '#FF5A38'
+const TINTA = '#15221B'
+const PAPEL = '#F5F0E5'
+
 export default function StateFilter({ activeState }: { activeState?: string }) {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -25,7 +29,6 @@ export default function StateFilter({ activeState }: { activeState?: string }) {
     setQuery('')
   }
 
-  // Close on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (ref.current && !ref.current.contains(e.target as Node)) {
@@ -39,15 +42,14 @@ export default function StateFilter({ activeState }: { activeState?: string }) {
 
   return (
     <div ref={ref} className="relative mt-3">
-      {/* Trigger button */}
       <button
         onClick={() => setOpen(o => !o)}
-        className={cn(
-          'flex items-center gap-2 px-3.5 py-2 rounded-full text-sm font-semibold border transition-all duration-150 cursor-pointer',
-          activeState
-            ? 'bg-[#FF5A38] border-[#FF5A38] text-white'
-            : 'bg-transparent border-white/10 text-gray-400 hover:border-white/25 hover:text-gray-200'
-        )}
+        className="flex items-center gap-2 px-3.5 py-2 rounded-full text-sm font-semibold border transition-all duration-150 cursor-pointer"
+        style={{
+          backgroundColor: activeState ? CORAL : 'white',
+          borderColor: activeState ? CORAL : 'rgba(0,0,0,0.12)',
+          color: activeState ? 'white' : TINTA,
+        }}
       >
         <MapPin className="w-3.5 h-3.5 shrink-0" />
         <span>{activeState ?? 'Todo Venezuela'}</span>
@@ -64,56 +66,60 @@ export default function StateFilter({ activeState }: { activeState?: string }) {
         )}
       </button>
 
-      {/* Dropdown */}
       {open && (
-        <div className="absolute top-full left-0 mt-2 z-50 w-72 bg-[#1a1a1a] border border-white/10 rounded-2xl shadow-2xl shadow-black/60 overflow-hidden">
-          {/* Search input */}
-          <div className="p-3 border-b border-white/5">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-500" />
-              <input
-                autoFocus
-                type="text"
-                value={query}
-                onChange={e => setQuery(e.target.value)}
-                placeholder="Buscar estado..."
-                className="w-full bg-[#111] border border-white/10 rounded-xl pl-8 pr-3 py-2 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-[#FF5A38] transition-colors"
-              />
+        <>
+          {/* Overlay */}
+          <div className="fixed inset-0 z-40" style={{ backgroundColor: 'rgba(0,0,0,0.25)' }} onClick={() => { setOpen(false); setQuery('') }} />
+
+          {/* Dropdown */}
+          <div className="absolute top-full left-0 mt-2 z-50 w-72 bg-white border border-black/8 rounded-2xl shadow-xl overflow-hidden">
+            <div className="p-3 border-b border-black/5">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: '#9CA3AF' }} />
+                <input
+                  autoFocus
+                  type="text"
+                  value={query}
+                  onChange={e => setQuery(e.target.value)}
+                  placeholder="Buscar estado..."
+                  className="w-full rounded-xl pl-8 pr-3 py-2 text-sm focus:outline-none focus:border-[#FF5A38] border transition-colors"
+                  style={{ backgroundColor: PAPEL, color: TINTA, borderColor: 'rgba(0,0,0,0.08)' }}
+                />
+              </div>
+            </div>
+
+            <div className="max-h-64 overflow-y-auto">
+              <button
+                onClick={() => handleSelect('')}
+                className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-left transition-colors cursor-pointer hover:bg-[#FFF0EC]"
+                style={{ color: !activeState ? CORAL : TINTA, fontWeight: !activeState ? 700 : 400 }}
+              >
+                <MapPin className="w-3.5 h-3.5 shrink-0" style={{ color: CORAL }} />
+                Todo Venezuela
+              </button>
+
+              {filtered.length === 0 && (
+                <p className="px-4 py-3 text-sm" style={{ color: '#9CA3AF' }}>Sin resultados</p>
+              )}
+
+              {filtered.map(state => (
+                <button
+                  key={state}
+                  onClick={() => handleSelect(state)}
+                  className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-left transition-colors cursor-pointer hover:bg-[#FFF0EC]"
+                  style={{
+                    color: activeState === state ? CORAL : TINTA,
+                    fontWeight: activeState === state ? 700 : 400,
+                    backgroundColor: activeState === state ? '#FFF0EC' : 'transparent',
+                  }}
+                >
+                  <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: activeState === state ? CORAL : 'transparent' }} />
+                  {state}
+                </button>
+              ))}
             </div>
           </div>
-
-          {/* Options */}
-          <div className="max-h-60 overflow-y-auto">
-            <button
-              onClick={() => handleSelect('')}
-              className={cn(
-                'w-full flex items-center gap-2 px-4 py-2.5 text-sm text-left transition-colors cursor-pointer hover:bg-white/5',
-                !activeState ? 'text-[#FF5A38] font-semibold' : 'text-gray-300'
-              )}
-            >
-              <MapPin className="w-3.5 h-3.5 shrink-0" />
-              Todo Venezuela
-            </button>
-
-            {filtered.length === 0 && (
-              <p className="px-4 py-3 text-sm text-gray-600">Sin resultados</p>
-            )}
-
-            {filtered.map(state => (
-              <button
-                key={state}
-                onClick={() => handleSelect(state)}
-                className={cn(
-                  'w-full flex items-center gap-2 px-4 py-2.5 text-sm text-left transition-colors cursor-pointer hover:bg-white/5',
-                  activeState === state ? 'text-[#FF5A38] font-semibold bg-[#FF5A38]/10' : 'text-gray-300'
-                )}
-              >
-                <span className={cn('w-1.5 h-1.5 rounded-full shrink-0', activeState === state ? 'bg-green-400' : 'bg-transparent')} />
-                {state}
-              </button>
-            ))}
-          </div>
-        </div>
+        </>
       )}
     </div>
   )

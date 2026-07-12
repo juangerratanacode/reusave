@@ -13,7 +13,7 @@ export const dynamic = 'force-dynamic'
 export default async function FeedPage({
   searchParams,
 }: {
-  searchParams: { category?: string; q?: string; state?: string }
+  searchParams: { category?: string; q?: string; state?: string; min?: string; max?: string; type?: string }
 }) {
   const supabase = createClient()
 
@@ -47,6 +47,18 @@ export default async function FeedPage({
 
   if (searchParams.state) {
     query = query.eq('state', searchParams.state)
+  }
+
+  if (searchParams.min) {
+    query = query.gte('price', parseFloat(searchParams.min))
+  }
+
+  if (searchParams.max) {
+    query = query.lte('price', parseFloat(searchParams.max))
+  }
+
+  if (searchParams.type) {
+    query = query.eq('listing_type', searchParams.type)
   }
 
   const { data: listings } = await query

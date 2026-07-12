@@ -1,6 +1,7 @@
 'use client'
 import { useRouter } from 'next/navigation'
 import { Category } from '@/types'
+import FilterSheet from './FilterSheet'
 
 const CORAL = '#FF5A38'
 const CORAL_BG = '#FFF0EC'
@@ -44,6 +45,11 @@ export default function CategoryFilter({ categories, active }: { categories: Cat
             </button>
           )
         })}
+
+        {/* Separador visual */}
+        <div className="w-px bg-black/10 self-stretch mx-1 shrink-0" />
+
+        <FilterSheet categories={categories} activeCategory={active} />
       </div>
     </div>
   )
