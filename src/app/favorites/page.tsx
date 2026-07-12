@@ -6,6 +6,10 @@ import ListingCard from '@/components/listings/ListingCard'
 import { Listing } from '@/types'
 import Link from 'next/link'
 
+const PAPEL = '#F5F0E5'
+const TINTA = '#15221B'
+const CORAL = '#FF5A38'
+
 export default async function FavoritesPage() {
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -28,20 +32,27 @@ export default async function FavoritesPage() {
   const listings = favorites?.map((f: any) => f.listings).filter(Boolean) ?? []
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f]">
+    <div className="min-h-screen" style={{ backgroundColor: PAPEL }}>
       <Navbar />
       <main className="max-w-2xl mx-auto px-3 pt-16 pb-24">
-        <h1 className="text-lg font-bold text-gray-100 mt-4 mb-4">❤️ Guardados</h1>
+        <h1 className="text-lg font-bold mt-4 mb-4" style={{ color: TINTA }}>❤️ Guardados</h1>
 
         {listings.length > 0 ? (
           <div className="grid grid-cols-2 gap-3">
             {listings.map((l: any) => <ListingCard key={l.id} listing={l as Listing} />)}
           </div>
         ) : (
-          <div className="text-center py-16 text-gray-500">
-            <p className="text-4xl mb-3">🤍</p>
-            <p>Aún no tienes nada guardado</p>
-            <Link href="/" className="mt-4 inline-block text-green-400 text-sm hover:underline">
+          <div className="text-center py-20">
+            <div className="w-16 h-16 rounded-2xl bg-white border border-black/8 flex items-center justify-center mx-auto mb-4">
+              <span className="text-3xl">🤍</span>
+            </div>
+            <p className="font-semibold mb-1" style={{ color: TINTA }}>Aún no tienes nada guardado</p>
+            <p className="text-sm mb-5" style={{ color: '#9CA3AF' }}>Guarda artículos que te interesen para verlos luego</p>
+            <Link
+              href="/feed"
+              className="inline-block font-bold text-sm px-6 py-3 rounded-xl text-white hover:opacity-90 transition-opacity"
+              style={{ backgroundColor: CORAL }}
+            >
               Explorar publicaciones
             </Link>
           </div>

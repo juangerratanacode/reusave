@@ -31,7 +31,7 @@ export default function SignupPage() {
     if (password !== confirm) { setError('Las contraseñas no coinciden.'); return }
 
     setLoading(true)
-    const { error: err } = await supabase.auth.signUp({
+    const { data, error: err } = await supabase.auth.signUp({
       email: email.trim(),
       password,
       options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
@@ -49,7 +49,11 @@ export default function SignupPage() {
       } else {
         setError('No se pudo crear la cuenta. Intenta de nuevo.')
       }
+    } else if (data.session) {
+      // Email confirmation OFF — session returned immediately, redirect to feed
+      router.replace('/feed')
     } else {
+      // Email confirmation ON — show "check your email" screen
       setSuccess(true)
     }
   }
