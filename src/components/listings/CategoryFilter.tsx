@@ -2,26 +2,26 @@
 import { useRouter } from 'next/navigation'
 import { Category } from '@/types'
 
-const CORAL = '#EF4D28'
-const TINTA = '#0F1B13'
+const VERDE = '#EF4D28'
+const VERDE_BG = '#FFF0EC'
+const TINTA = '#15221B'
 
 export default function CategoryFilter({ categories, active }: { categories: Category[], active?: string }) {
   const router = useRouter()
 
   return (
     <div className="relative">
-      {/* Fade hint derecha en mobile */}
-      <div className="absolute right-0 top-0 bottom-0 w-8 z-10 pointer-events-none sm:hidden"
-        style={{ background: 'linear-gradient(to right, transparent, #F0EDE6)' }} />
+      <div className="absolute right-0 top-0 bottom-0 w-10 z-10 pointer-events-none sm:hidden"
+        style={{ background: 'linear-gradient(to right, transparent, #F5F0E5)' }} />
 
-      <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1">
+      <div className="flex gap-2.5 overflow-x-auto scrollbar-hide pb-1 sm:flex-wrap">
         <button
           onClick={() => router.push('/feed')}
-          className="shrink-0 text-xs font-semibold px-4 py-1.5 rounded-full border transition-all whitespace-nowrap"
+          className="shrink-0 text-base font-bold px-5 py-2.5 rounded-full border-2 transition-all whitespace-nowrap cursor-pointer"
           style={{
-            backgroundColor: !active ? CORAL : 'white',
+            backgroundColor: !active ? VERDE : 'white',
             color: !active ? 'white' : '#6B7280',
-            borderColor: !active ? CORAL : 'rgba(0,0,0,0.12)',
+            borderColor: !active ? VERDE : 'rgba(0,0,0,0.10)',
           }}
         >
           Todo
@@ -33,11 +33,11 @@ export default function CategoryFilter({ categories, active }: { categories: Cat
             <button
               key={cat.id}
               onClick={() => router.push(isActive ? '/feed' : `/feed?category=${cat.slug}`)}
-              className="shrink-0 text-xs font-semibold px-4 py-1.5 rounded-full border transition-all whitespace-nowrap"
+              className="shrink-0 text-base font-bold px-5 py-2.5 rounded-full border-2 transition-all whitespace-nowrap cursor-pointer"
               style={{
-                backgroundColor: isActive ? CORAL : 'white',
-                color: isActive ? 'white' : '#6B7280',
-                borderColor: isActive ? CORAL : 'rgba(0,0,0,0.12)',
+                backgroundColor: isActive ? VERDE : VERDE_BG,
+                color: isActive ? 'white' : TINTA,
+                borderColor: isActive ? VERDE : 'transparent',
               }}
             >
               {cat.icon} {cat.name}
