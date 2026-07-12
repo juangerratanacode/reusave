@@ -80,12 +80,13 @@ export default function LandingPage({ listings, categories, searchParams }: Prop
 
       {/* ── HERO — imagen full width estilo Wallapop ── */}
       <div className="pt-14">
-        <div className="relative w-full h-64 sm:h-80 lg:h-[440px]">
+        <div className="relative w-full h-72 sm:h-96 lg:h-[480px]">
           <Image
             src="/hero.jpg"
             alt="Compra y vende lo que ya no usas"
             fill
-            className="object-cover object-center"
+            className="object-cover"
+            style={{ objectPosition: '50% 15%' }}
             priority
             sizes="100vw"
           />
@@ -162,8 +163,11 @@ export default function LandingPage({ listings, categories, searchParams }: Prop
 
       {/* ── CATEGORÍAS ── */}
       <div className="bg-white border-b border-black/8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
-          <div className="flex gap-2 overflow-x-auto scrollbar-hide">
+        <div className="max-w-7xl mx-auto py-3 relative">
+          {/* Degradado derecho — hint visual de que hay más */}
+          <div className="absolute right-0 top-0 bottom-0 w-12 z-10 pointer-events-none sm:hidden"
+            style={{ background: 'linear-gradient(to right, transparent, white)' }} />
+          <div className="flex gap-2 overflow-x-auto scrollbar-hide px-4 sm:px-6">
             <button
               onClick={() => router.push('/')}
               className="shrink-0 text-xs font-semibold px-4 py-1.5 rounded-full border transition-all"
