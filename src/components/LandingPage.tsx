@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Search, Plus, X, MapPin, ArrowRight, ShieldCheck, Zap, Users, Star } from 'lucide-react'
+import { Search, Plus, X, MapPin, ArrowRight, ShieldCheck, Zap, Users } from 'lucide-react'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { formatPrice, timeAgo } from '@/lib/utils'
@@ -324,31 +324,6 @@ export default function LandingPage({ listings, categories, searchParams }: Prop
         </div>
       </section>
 
-      {/* ── TESTIMONIOS ── */}
-      <section className="py-10 bg-white border-t border-black/8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <h2 className="font-display text-xl font-bold mb-6 text-center" style={{ color: TINTA }}>Lo que dice la comunidad</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {[
-              { name: 'María G.', city: 'Caracas', text: 'Vendí ropa que tenía guardada hace años. En un día tenía 3 compradores. Increíble.' },
-              { name: 'Carlos M.', city: 'Maracay', text: 'Encontré una nevera en buen estado a mitad de precio. El contacto por WhatsApp fue directo y fácil.' },
-              { name: 'Luisa R.', city: 'Valencia', text: 'Por fin un Wallapop venezolano. Sin comisiones raras, sin pasos complicados. Así se hace.' },
-            ].map((t, i) => (
-              <div key={i} className="rounded-2xl p-5 border border-black/8" style={{ backgroundColor: PAPEL }}>
-                <div className="flex gap-0.5 mb-3">
-                  {[...Array(5)].map((_, j) => <Star key={j} className="w-3.5 h-3.5 fill-current" style={{ color: '#FBBF24' }} />)}
-                </div>
-                <p className="text-sm leading-relaxed mb-3" style={{ color: '#4B5563' }}>"{t.text}"</p>
-                <div>
-                  <p className="text-xs font-bold" style={{ color: TINTA }}>{t.name}</p>
-                  <p className="text-[10px]" style={{ color: '#9CA3AF' }}>{t.city}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ── CTA FINAL con imagen de fondo ── */}
       <section style={{ position: 'relative', height: '320px', overflow: 'hidden' }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -364,19 +339,6 @@ export default function LandingPage({ listings, categories, searchParams }: Prop
           <a href="/auth/signup" style={{ backgroundColor: '#FF5A38', color: 'white', fontWeight: 700, padding: '12px 28px', borderRadius: '12px', textDecoration: 'none', fontSize: '1rem' }}>
             Publicar gratis →
           </a>
-        </div>
-      </section>
-
-      {/* ── IMAGEN COMUNIDAD ── */}
-      <section className="relative h-64 sm:h-80 lg:h-96 overflow-hidden">
-        <img
-          src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1400&q=80"
-          alt="Comunidad Resuelve"
-          className="w-full h-full object-cover object-center"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col items-center justify-end pb-8 text-center px-4">
-          <h2 className="font-display text-white text-2xl sm:text-3xl font-bold mb-2">Hecho para Venezuela 🇻🇪</h2>
-          <p className="text-white/80 text-sm sm:text-base">Conectamos a quienes tienen con quienes necesitan</p>
         </div>
       </section>
 
