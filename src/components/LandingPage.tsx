@@ -91,7 +91,7 @@ export default function LandingPage({ listings, categories, searchParams }: Prop
             sizes="100vw"
           />
           {/* Gradient overlay para legibilidad del texto */}
-          <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(15,27,19,0.72) 0%, rgba(15,27,19,0.3) 60%, transparent 100%)' }} />
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(15,27,19,0.88) 0%, rgba(15,27,19,0.55) 60%, rgba(15,27,19,0.20) 100%)' }} />
 
           {/* Texto sobre la imagen — alineado con el grid principal */}
           <div className="absolute inset-0 flex items-center">
