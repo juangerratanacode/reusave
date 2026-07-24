@@ -86,7 +86,7 @@ export default function LandingPage({ listings, categories, searchParams }: Prop
             alt="Compra y vende lo que ya no usas"
             fill
             className="object-cover"
-            style={{ objectPosition: 'center top' }}
+            style={{ objectPosition: 'center center' }}
             priority
             sizes="100vw"
           />
