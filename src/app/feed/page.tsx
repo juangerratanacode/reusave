@@ -17,51 +17,59 @@ export default async function FeedPage({
 }) {
   const supabase = createClient()
 
-  // Feed is public — no auth required
-  let query = supabase
-    .from('listings')
-    .select(`
-      *,
-      profiles (id, username, full_name, whatsapp, city),
-      categories (id, slug, name, icon, color, type),
-      listing_images (id, url, is_cover, sort_order)
-    `)
-    .eq('status', 'active')
-    .order('is_urgent', { ascending: false })
-    .order('created_at', { ascending: false })
-    .limit(40)
-
-  if (searchParams.category) {
-    const { data: cat } = await supabase
-      .from('categories')
-      .select('id')
-      .eq('slug', searchParams.category)
-      .single()
-    if (cat) query = query.eq('category_id', cat.id)
-  }
+  let listings: any[] | null = null
 
   if (searchParams.q) {
-    const term = `%${searchParams.q}%`
-    query = query.or(`title.ilike.${term},description.ilike.${term}`)
-  }
+    // Búsqueda fuzzy via RPC (pg_trgm) — soporta errores de tipeo, sin tilde, singular/plural
+    const { data: rpcRows } = await supabase
+      .rpc('search_listings', { search_term: searchParams.q })
+      .select(`
+        *,
+        profiles (id, username, full_name, whatsapp, city),
+        categories (id, slug, name, icon, color, type),
+        listing_images (id, url, is_cover, sort_order)
+      `)
 
-  if (searchParams.state) {
-    query = query.eq('state', searchParams.state)
-  }
+    // Aplica filtros adicionales en JS (la RPC ya filtra status=active)
+    let rows = rpcRows ?? []
 
-  if (searchParams.min) {
-    query = query.gte('price', parseFloat(searchParams.min))
-  }
+    if (searchParams.category) {
+      const { data: cat } = await supabase.from('categories').select('id').eq('slug', searchParams.category).single()
+      if (cat) rows = rows.filter((r: any) => r.category_id === cat.id)
+    }
+    if (searchParams.state) rows = rows.filter((r: any) => r.state === searchParams.state)
+    if (searchParams.min)   rows = rows.filter((r: any) => (r.price ?? 0) >= parseFloat(searchParams.min!))
+    if (searchParams.max)   rows = rows.filter((r: any) => (r.price ?? 0) <= parseFloat(searchParams.max!))
+    if (searchParams.type)  rows = rows.filter((r: any) => r.listing_type === searchParams.type)
 
-  if (searchParams.max) {
-    query = query.lte('price', parseFloat(searchParams.max))
-  }
+    listings = rows
+  } else {
+    // Sin búsqueda de texto — query normal con todos los filtros en BD
+    let query = supabase
+      .from('listings')
+      .select(`
+        *,
+        profiles (id, username, full_name, whatsapp, city),
+        categories (id, slug, name, icon, color, type),
+        listing_images (id, url, is_cover, sort_order)
+      `)
+      .eq('status', 'active')
+      .order('is_urgent', { ascending: false })
+      .order('created_at', { ascending: false })
+      .limit(40)
 
-  if (searchParams.type) {
-    query = query.eq('listing_type', searchParams.type)
-  }
+    if (searchParams.category) {
+      const { data: cat } = await supabase.from('categories').select('id').eq('slug', searchParams.category).single()
+      if (cat) query = query.eq('category_id', cat.id)
+    }
+    if (searchParams.state) query = query.eq('state', searchParams.state)
+    if (searchParams.min)   query = query.gte('price', parseFloat(searchParams.min))
+    if (searchParams.max)   query = query.lte('price', parseFloat(searchParams.max))
+    if (searchParams.type)  query = query.eq('listing_type', searchParams.type)
 
-  const { data: listings } = await query
+    const { data } = await query
+    listings = data
+  }
 
   const { data: categories } = await supabase
     .from('categories')
