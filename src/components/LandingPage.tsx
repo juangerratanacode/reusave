@@ -99,7 +99,7 @@ export default function LandingPage({ listings, categories, searchParams }: Prop
           <div className="flex flex-col justify-center max-w-lg">
             <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold mb-3 self-start" style={{ backgroundColor: 'rgba(239,77,40,0.9)', color: 'white' }}>
               <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-              Apoyo post-sismo Venezuela
+              +24 estados · Publica gratis hoy
             </div>
             <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight mb-3 drop-shadow-sm">
               Compra y vende<br />
