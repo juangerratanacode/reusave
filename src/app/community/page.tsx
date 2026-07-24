@@ -107,7 +107,7 @@ export default async function CommunityPage() {
         <section style={{ position: 'relative', height: '320px', overflow: 'hidden' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/seccion-vende.jpg"
+            src="/seccion-familia.jpg"
             alt=""
             style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }}
           />
@@ -157,22 +157,22 @@ export default async function CommunityPage() {
           </div>
         </section>
 
-        {/* ── CTA FINAL ── */}
-        <section className="py-16 px-5 text-center max-w-lg mx-auto">
-          <span className="text-4xl block mb-4">📦</span>
-          <h2 className="font-display text-2xl sm:text-3xl font-bold mb-2 leading-tight" style={{ color: TINTA }}>
-            ¿Tienes algo que ya no usas?
-          </h2>
-          <p className="text-sm mb-8" style={{ color: '#9CA3AF' }}>
-            Publícalo gratis. Sin comisiones. En menos de 2 minutos desde tu teléfono.
-          </p>
-          <Link
-            href="/listings/new"
-            className="inline-block font-bold px-8 py-4 rounded-xl text-white text-base hover:opacity-90 transition-opacity"
-            style={{ backgroundColor: CORAL }}
-          >
-            Publicar gratis →
-          </Link>
+        {/* ── CTA FINAL con imagen de fondo ── */}
+        <section style={{ position: 'relative', height: '320px', overflow: 'hidden' }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/seccion-vende.jpg"
+            alt=""
+            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }}
+          />
+          <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.48)' }} />
+          <div style={{ position: 'relative', zIndex: 10, height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '0 24px', textAlign: 'center', gap: '12px' }}>
+            <h2 style={{ color: 'white', fontSize: '1.75rem', fontWeight: 900, lineHeight: 1.2, margin: 0 }}>¿Tienes algo que ya no usas?</h2>
+            <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '0.95rem', margin: 0 }}>Publícalo gratis. Sin comisiones. En menos de 2 minutos desde tu teléfono.</p>
+            <a href="/listings/new" style={{ backgroundColor: CORAL, color: 'white', fontWeight: 700, padding: '12px 28px', borderRadius: '12px', textDecoration: 'none', fontSize: '1rem' }}>
+              Publicar gratis →
+            </a>
+          </div>
         </section>
 
         {/* ── FOOTER ── */}
