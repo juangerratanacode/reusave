@@ -31,7 +31,7 @@ export default async function FeedPage({
 
     // Búsqueda fuzzy via RPC (pg_trgm) — título y descripción
     const { data: rpcRows } = await supabase
-      .rpc('search_listings', { search_term: q })
+      .rpc('search_listings', { query: q })
       .select(`
         *,
         profiles (id, username, full_name, whatsapp, city),
