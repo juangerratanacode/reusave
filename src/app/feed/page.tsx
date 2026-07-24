@@ -20,9 +20,18 @@ export default async function FeedPage({
   let listings: any[] | null = null
 
   if (searchParams.q) {
-    // Búsqueda fuzzy via RPC (pg_trgm) — soporta errores de tipeo, sin tilde, singular/plural
+    const q = searchParams.q
+
+    // Buscar categorías cuyo nombre coincide con el término (ej: "ropa" → "Ropa y Calzado")
+    const { data: matchingCats } = await supabase
+      .from('categories')
+      .select('id')
+      .ilike('name', `%${q}%`)
+    const catIds = matchingCats?.map((c: any) => c.id) ?? []
+
+    // Búsqueda fuzzy via RPC (pg_trgm) — título y descripción
     const { data: rpcRows } = await supabase
-      .rpc('search_listings', { search_term: searchParams.q })
+      .rpc('search_listings', { search_term: q })
       .select(`
         *,
         profiles (id, username, full_name, whatsapp, city),
@@ -30,9 +39,33 @@ export default async function FeedPage({
         listing_images (id, url, is_cover, sort_order)
       `)
 
-    // Aplica filtros adicionales en JS (la RPC ya filtra status=active)
-    let rows = rpcRows ?? []
+    // Listings de categorías que coinciden por nombre (exacto, no fuzzy)
+    let catRows: any[] = []
+    if (catIds.length > 0) {
+      const { data } = await supabase
+        .from('listings')
+        .select(`
+          *,
+          profiles (id, username, full_name, whatsapp, city),
+          categories (id, slug, name, icon, color, type),
+          listing_images (id, url, is_cover, sort_order)
+        `)
+        .eq('status', 'active')
+        .in('category_id', catIds)
+        .order('is_urgent', { ascending: false })
+        .order('created_at', { ascending: false })
+        .limit(20)
+      catRows = data ?? []
+    }
 
+    // Combinar y deduplicar por id (RPC primero = mejor relevancia)
+    const seen = new Set<string>()
+    let rows: any[] = []
+    for (const r of [...(rpcRows ?? []), ...catRows]) {
+      if (!seen.has(r.id)) { seen.add(r.id); rows.push(r) }
+    }
+
+    // Filtros adicionales
     if (searchParams.category) {
       const { data: cat } = await supabase.from('categories').select('id').eq('slug', searchParams.category).single()
       if (cat) rows = rows.filter((r: any) => r.category_id === cat.id)
