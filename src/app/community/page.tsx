@@ -106,13 +106,12 @@ export default async function CommunityPage() {
         {/* ── FRASE MOTIVACIONAL con imagen de fondo ── */}
         <section className="relative overflow-hidden">
           <img
-            src="/seccion-familia.jpg"
+            src="/seccion-familia.png"
             alt=""
             className="absolute inset-0 w-full h-full object-cover object-center"
           />
           <div className="absolute inset-0" style={{ backgroundColor: 'rgba(0,0,0,0.45)' }} />
           <div className="relative py-16 px-5 text-center max-w-2xl mx-auto">
-            <span className="text-4xl block mb-5">🏘️</span>
             <blockquote className="font-display text-xl sm:text-2xl font-bold leading-snug text-white">
               "Donde una familia vende lo que no usa,<br className="hidden sm:block" />
               otra encuentra lo que necesita."

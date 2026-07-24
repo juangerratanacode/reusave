@@ -348,7 +348,7 @@ export default function LandingPage({ listings, categories, searchParams }: Prop
       {/* ── CTA FINAL con imagen de fondo ── */}
       <section className="relative overflow-hidden border-t border-black/8">
         <img
-          src="/seccion-vende.jpg"
+          src="/seccion-vende.png"
           alt=""
           className="absolute inset-0 w-full h-full object-cover object-center"
         />
