@@ -70,17 +70,17 @@ export default async function CommunityPage() {
             <p className="text-white/80 text-base sm:text-lg leading-relaxed max-w-xl mx-auto mb-8">
               Un espacio donde venezolanos se ayudan entre sí. Compra, vende, dona e intercambia sin comisiones ni intermediarios.
             </p>
-            <div className="flex gap-3 justify-center flex-wrap">
+            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
               <Link
                 href="/listings/new"
-                className="font-bold px-6 py-3 rounded-xl text-sm hover:opacity-90 transition-opacity"
+                className="font-bold px-6 py-3 rounded-xl text-sm hover:opacity-90 transition-opacity w-full sm:w-auto text-center"
                 style={{ backgroundColor: CORAL, color: 'white' }}
               >
                 Publicar gratis
               </Link>
               <Link
                 href="/feed"
-                className="font-bold px-6 py-3 rounded-xl text-sm border border-white/30 text-white hover:bg-white/10 transition-colors"
+                className="font-bold px-6 py-3 rounded-xl text-sm border border-white/30 text-white hover:bg-white/10 transition-colors w-full sm:w-auto text-center"
               >
                 Ver publicaciones
               </Link>
@@ -103,14 +103,22 @@ export default async function CommunityPage() {
           </div>
         </section>
 
-        {/* ── FRASE MOTIVACIONAL ── */}
-        <section className="py-14 px-5 text-center max-w-2xl mx-auto">
-          <span className="text-4xl block mb-5">🏘️</span>
-          <blockquote className="font-display text-xl sm:text-2xl font-bold leading-snug" style={{ color: TINTA }}>
-            "Donde una familia vende lo que no usa,<br className="hidden sm:block" />
-            otra encuentra lo que necesita."
-          </blockquote>
-          <p className="text-sm mt-4" style={{ color: '#9CA3AF' }}>— La filosofía detrás de Resuelve</p>
+        {/* ── FRASE MOTIVACIONAL con imagen de fondo ── */}
+        <section className="relative overflow-hidden">
+          <img
+            src="/seccion-familia.jpg"
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover object-center"
+          />
+          <div className="absolute inset-0" style={{ backgroundColor: 'rgba(0,0,0,0.45)' }} />
+          <div className="relative py-16 px-5 text-center max-w-2xl mx-auto">
+            <span className="text-4xl block mb-5">🏘️</span>
+            <blockquote className="font-display text-xl sm:text-2xl font-bold leading-snug text-white">
+              "Donde una familia vende lo que no usa,<br className="hidden sm:block" />
+              otra encuentra lo que necesita."
+            </blockquote>
+            <p className="text-sm mt-4 text-white/60">— La filosofía detrás de Resuelve</p>
+          </div>
         </section>
 
         {/* ── CATEGORÍAS ── */}
