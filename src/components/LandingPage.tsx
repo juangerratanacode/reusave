@@ -101,9 +101,6 @@ export default function LandingPage({ listings, categories, searchParams }: Prop
               Compra y vende<br />
               <span style={{ color: '#6EE7A0' }}>lo que ya no usas</span>
             </h1>
-            <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '0.8rem', marginBottom: '4px', letterSpacing: '0.05em' }}>
-              Disponible en los 24 estados de Venezuela
-            </p>
             <p className="text-sm sm:text-base text-white/80 mb-5 max-w-sm">
               El marketplace de segunda mano hecho para Venezuela. Sin comisiones. Sin intermediarios.
             </p>
