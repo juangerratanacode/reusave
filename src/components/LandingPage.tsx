@@ -86,15 +86,17 @@ export default function LandingPage({ listings, categories, searchParams }: Prop
             alt="Compra y vende lo que ya no usas"
             fill
             className="object-cover"
-            style={{ objectPosition: 'center center' }}
+            style={{ objectPosition: 'center top' }}
             priority
             sizes="100vw"
           />
           {/* Gradient overlay para legibilidad del texto */}
           <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(15,27,19,0.72) 0%, rgba(15,27,19,0.3) 60%, transparent 100%)' }} />
 
-          {/* Texto sobre la imagen */}
-          <div className="absolute inset-0 flex flex-col justify-center px-6 sm:px-12 max-w-2xl">
+          {/* Texto sobre la imagen — alineado con el grid principal */}
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="flex flex-col justify-center max-w-lg">
             <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold mb-3 self-start" style={{ backgroundColor: 'rgba(239,77,40,0.9)', color: 'white' }}>
               <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
               Apoyo post-sismo Venezuela
@@ -121,8 +123,10 @@ export default function LandingPage({ listings, categories, searchParams }: Prop
                 Ver publicaciones
               </Link>
             </div>
+            </div>
           </div>
         </div>
+      </div>
       </div>
 
       {/* ── SEARCH MOBILE ── */}
