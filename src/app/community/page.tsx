@@ -104,19 +104,19 @@ export default async function CommunityPage() {
         </section>
 
         {/* ── FRASE MOTIVACIONAL con imagen de fondo ── */}
-        <section className="relative overflow-hidden">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <section style={{ position: 'relative', height: '320px', overflow: 'hidden' }}>
           <img
-            src="/seccion-familia.png"
+            src="/hero.jpg"
             alt=""
-            className="absolute inset-0 w-full h-full object-cover object-center"
+            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }}
           />
-          <div className="absolute inset-0" style={{ backgroundColor: 'rgba(0,0,0,0.45)' }} />
-          <div className="relative py-16 px-5 text-center max-w-2xl mx-auto">
-            <blockquote className="font-display text-xl sm:text-2xl font-bold leading-snug text-white">
-              "Donde una familia vende lo que no usa,<br className="hidden sm:block" />
-              otra encuentra lo que necesita."
+          <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.50)' }} />
+          <div style={{ position: 'relative', zIndex: 10, height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '0 24px', textAlign: 'center' }}>
+            <blockquote className="font-display" style={{ fontSize: '1.25rem', fontWeight: 700, color: 'white', lineHeight: 1.4, maxWidth: '560px' }}>
+              "Donde una familia vende lo que no usa, otra encuentra lo que necesita."
             </blockquote>
-            <p className="text-sm mt-4 text-white/60">— La filosofía detrás de Resuelve</p>
+            <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.60)', marginTop: '16px' }}>— La filosofía detrás de Resuelve</p>
           </div>
         </section>
 

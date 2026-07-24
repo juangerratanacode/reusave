@@ -346,24 +346,24 @@ export default function LandingPage({ listings, categories, searchParams }: Prop
       </section>
 
       {/* ── CTA FINAL con imagen de fondo ── */}
-      <section className="relative h-64 sm:h-80 overflow-hidden flex items-center justify-center">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <section style={{ position: 'relative', height: '320px', overflow: 'hidden' }}>
         <img
           src="/seccion-vende.jpg"
           alt=""
-          className="absolute inset-0 w-full h-full object-cover object-center"
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }}
         />
-        <div className="absolute inset-0 bg-black/50" />
-        <div className="relative text-center px-6 max-w-md mx-auto">
-          <h2 className="font-display text-2xl font-bold text-white mb-3 leading-tight">
+        <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.50)' }} />
+        <div style={{ position: 'relative', zIndex: 10, height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '0 24px', textAlign: 'center' }}>
+          <h2 className="font-display" style={{ fontSize: '1.5rem', fontWeight: 700, color: 'white', marginBottom: '12px', lineHeight: 1.3 }}>
             ¿Tienes algo que ya no usas?
           </h2>
-          <p className="text-sm text-white/80 mb-6">
+          <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.80)', marginBottom: '24px', maxWidth: '360px' }}>
             Publícalo gratis. Sin comisiones. En menos de 2 minutos desde tu teléfono.
           </p>
           <Link
             href="/auth/signup"
-            className="inline-flex items-center gap-2 text-white font-bold px-7 py-3.5 rounded-xl hover:opacity-90 transition-opacity"
-            style={{ backgroundColor: CORAL }}
+            style={{ backgroundColor: CORAL, color: 'white', fontWeight: 700, padding: '14px 28px', borderRadius: '12px', textDecoration: 'none', display: 'inline-block' }}
           >
             Publicar gratis →
           </Link>
