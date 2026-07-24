@@ -379,7 +379,11 @@ export default function LandingPage({ listings, categories, searchParams }: Prop
           <span className="font-display font-bold text-sm" style={{ color: TINTA }}>
             resuel<span style={{ color: CORAL }}>✓</span>e
           </span>
-          <p className="text-xs" style={{ color: '#B0A89E' }}>entrayresuelve.com · Hecho con ❤️ para Venezuela · 2026</p>
+          <div className="flex items-center gap-3">
+            <Link href="/community" className="text-xs hover:underline" style={{ color: '#B0A89E' }}>Comunidad</Link>
+            <span style={{ color: '#D4CFC7' }}>·</span>
+            <p className="text-xs" style={{ color: '#B0A89E' }}>entrayresuelve.com · Hecho con ❤️ para Venezuela · 2026</p>
+          </div>
         </div>
       </footer>
 
