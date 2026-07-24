@@ -2,13 +2,9 @@ import { createClient } from '@/lib/supabase-server'
 import { redirect } from 'next/navigation'
 import Navbar from '@/components/layout/Navbar'
 import BottomNav from '@/components/layout/BottomNav'
-import ListingCard from '@/components/listings/ListingCard'
-import { Listing } from '@/types'
-import Link from 'next/link'
+import FavoritesClient from './FavoritesClient'
 
-const PAPEL = '#F5F0E5'
-const TINTA = '#15221B'
-const CORAL = '#FF5A38'
+export const dynamic = 'force-dynamic'
 
 export default async function FavoritesPage() {
   const supabase = createClient()
@@ -19,6 +15,7 @@ export default async function FavoritesPage() {
     .from('favorites')
     .select(`
       listing_id,
+      created_at,
       listings (
         *,
         categories (*),
@@ -29,35 +26,14 @@ export default async function FavoritesPage() {
     .eq('user_id', user.id)
     .order('created_at', { ascending: false })
 
-  const listings = favorites?.map((f: any) => f.listings).filter(Boolean) ?? []
+  const listings = favorites
+    ?.map((f: any) => ({ ...f.listings, favorited_at: f.created_at }))
+    .filter(Boolean) ?? []
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: PAPEL }}>
+    <div className="min-h-screen" style={{ backgroundColor: '#F5F0E5' }}>
       <Navbar />
-      <main className="max-w-2xl mx-auto px-3 pt-16 pb-24">
-        <h1 className="text-lg font-bold mt-4 mb-4" style={{ color: TINTA }}>❤️ Guardados</h1>
-
-        {listings.length > 0 ? (
-          <div className="grid grid-cols-2 gap-3">
-            {listings.map((l: any) => <ListingCard key={l.id} listing={l as Listing} />)}
-          </div>
-        ) : (
-          <div className="text-center py-20">
-            <div className="w-16 h-16 rounded-2xl bg-white border border-black/8 flex items-center justify-center mx-auto mb-4">
-              <span className="text-3xl">🤍</span>
-            </div>
-            <p className="font-semibold mb-1" style={{ color: TINTA }}>Aún no tienes nada guardado</p>
-            <p className="text-sm mb-5" style={{ color: '#9CA3AF' }}>Guarda artículos que te interesen para verlos luego</p>
-            <Link
-              href="/feed"
-              className="inline-block font-bold text-sm px-6 py-3 rounded-xl text-white hover:opacity-90 transition-opacity"
-              style={{ backgroundColor: CORAL }}
-            >
-              Explorar publicaciones
-            </Link>
-          </div>
-        )}
-      </main>
+      <FavoritesClient listings={listings} />
       <BottomNav />
     </div>
   )
