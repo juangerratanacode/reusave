@@ -51,17 +51,17 @@ export default async function CommunityPage() {
       <main className="pt-14 pb-28">
 
         {/* ── HERO ── */}
-        <section className="relative overflow-hidden h-72 sm:h-96 lg:h-[480px]" style={{ backgroundColor: VERDE }}>
-          {/* Imagen de fondo */}
+        <section style={{ position: 'relative', height: '420px', overflow: 'hidden', backgroundColor: VERDE }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1400&q=80"
+            src="/seccion-familia.jpg"
             alt="Comunidad Resuelve"
-            className="absolute inset-0 w-full h-full object-cover object-center"
+            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }}
           />
           {/* Overlay verde */}
-          <div className="absolute inset-0" style={{ backgroundColor: 'rgba(15,164,106,0.75)' }} />
+          <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(15,164,106,0.75)' }} />
 
-          <div className="relative max-w-3xl mx-auto px-5 py-16 sm:py-24 text-center h-full flex flex-col items-center justify-center">
+          <div style={{ position: 'relative', zIndex: 10, height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '0 20px', maxWidth: '768px', margin: '0 auto' }}>
             <span className="inline-block text-white/70 text-sm font-semibold uppercase tracking-widest mb-4">Sobre nosotros</span>
             <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight mb-5">
               Somos tu comunidad,<br />
@@ -104,10 +104,10 @@ export default async function CommunityPage() {
         </section>
 
         {/* ── FRASE MOTIVACIONAL con imagen de fondo ── */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
         <section style={{ position: 'relative', height: '320px', overflow: 'hidden' }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/hero.jpg"
+            src="/seccion-vende.jpg"
             alt=""
             style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }}
           />
