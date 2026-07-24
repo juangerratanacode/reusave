@@ -97,14 +97,13 @@ export default function LandingPage({ listings, categories, searchParams }: Prop
           <div className="absolute inset-0 flex items-center">
             <div className="w-full max-w-7xl mx-auto px-4 sm:px-6">
           <div className="flex flex-col justify-center max-w-lg">
-            <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold mb-3 self-start" style={{ backgroundColor: 'rgba(239,77,40,0.9)', color: 'white' }}>
-              <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-              +24 estados · Publica gratis hoy
-            </div>
-            <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight mb-3 drop-shadow-sm">
+            <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight mb-2 drop-shadow-sm">
               Compra y vende<br />
               <span style={{ color: '#6EE7A0' }}>lo que ya no usas</span>
             </h1>
+            <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '0.8rem', marginBottom: '4px', letterSpacing: '0.05em' }}>
+              Disponible en los 24 estados de Venezuela
+            </p>
             <p className="text-sm sm:text-base text-white/80 mb-5 max-w-sm">
               El marketplace de segunda mano hecho para Venezuela. Sin comisiones. Sin intermediarios.
             </p>
