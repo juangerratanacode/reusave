@@ -86,7 +86,7 @@ export default function LandingPage({ listings, categories, searchParams }: Prop
             alt="Compra y vende lo que ya no usas"
             fill
             className="object-cover"
-            style={{ objectPosition: 'center top' }}
+            style={{ objectPosition: 'center center' }}
             priority
             sizes="100vw"
           />
@@ -147,13 +147,13 @@ export default function LandingPage({ listings, categories, searchParams }: Prop
 
       {/* ── STATS BAR ── */}
       <div className="bg-white border-b border-black/8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-around sm:justify-start sm:gap-10">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-center gap-8 lg:gap-16">
           {[
             { n: '24', label: 'estados' },
             { n: '$0', label: 'para publicar' },
             { n: '0%', label: 'comisión' },
           ].map(s => (
-            <div key={s.label} className="flex items-baseline gap-1">
+            <div key={s.label} className="flex flex-col items-center text-center gap-0.5">
               <span className="font-accent text-base" style={{ color: CORAL }}>{s.n}</span>
               <span className="text-xs" style={{ color: '#9CA3AF' }}>{s.label}</span>
             </div>
