@@ -8,7 +8,7 @@ export default function LandingB() {
 
       {/* Navbar */}
       <header className="px-5 h-14 flex items-center justify-between border-b border-[#1a1a1a]">
-        <span className="font-black text-xl text-white">
+        <span className="font-display font-bold text-xl text-white">
           resuel<span style={{ color: '#FF5A38' }}>✓</span>e
         </span>
         <div className="flex items-center gap-3">

@@ -32,7 +32,10 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['var(--font-body)', 'Inter', 'system-ui', 'sans-serif'],
+        body: ['var(--font-body)', 'Inter', 'system-ui', 'sans-serif'],
+        display: ['var(--font-display)', 'sans-serif'],
+        accent: ['var(--font-accent)', 'sans-serif'],
       },
       boxShadow: {
         'brand-coral': '0 0 20px rgba(239, 77, 40, 0.3)',

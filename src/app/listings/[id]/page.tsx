@@ -94,7 +94,7 @@ export default async function ListingDetailPage({ params }: { params: { id: stri
 
           {/* Título y precio */}
           <div>
-            <h2 className="text-xl font-bold" style={{ color: TINTA }}>{listing.title}</h2>
+            <h2 className="font-display text-xl font-bold" style={{ color: TINTA }}>{listing.title}</h2>
             {listing.listing_type === 'exchange' ? (
               <div className="mt-2">
                 <span className="inline-block text-sm font-bold px-3 py-1 rounded-full" style={{ backgroundColor: '#EDE9FE', color: '#7C3AED' }}>

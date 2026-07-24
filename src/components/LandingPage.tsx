@@ -39,7 +39,7 @@ export default function LandingPage({ listings, categories, searchParams }: Prop
       <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-black/8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-3">
           {/* Logo */}
-          <span className="font-black text-lg tracking-tight shrink-0" style={{ color: TINTA }}>
+          <span className="font-display font-bold text-lg tracking-tight shrink-0" style={{ color: TINTA }}>
             resuel<span style={{ color: CORAL }}>✓</span>e
           </span>
 
@@ -99,7 +99,7 @@ export default function LandingPage({ listings, categories, searchParams }: Prop
               <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
               Apoyo post-sismo Venezuela
             </div>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight mb-3 drop-shadow-sm">
+            <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight mb-3 drop-shadow-sm">
               Compra y vende<br />
               <span style={{ color: '#6EE7A0' }}>lo que ya no usas</span>
             </h1>
@@ -154,7 +154,7 @@ export default function LandingPage({ listings, categories, searchParams }: Prop
             { n: '0%', label: 'comisión' },
           ].map(s => (
             <div key={s.label} className="flex items-baseline gap-1">
-              <span className="text-base font-black" style={{ color: CORAL }}>{s.n}</span>
+              <span className="font-accent text-base" style={{ color: CORAL }}>{s.n}</span>
               <span className="text-xs" style={{ color: '#9CA3AF' }}>{s.label}</span>
             </div>
           ))}
@@ -279,7 +279,7 @@ export default function LandingPage({ listings, categories, searchParams }: Prop
       {/* ── CÓMO FUNCIONA ── */}
       <section className="py-12 bg-white border-t border-b border-black/8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <h2 className="text-xl font-black mb-7 text-center" style={{ color: TINTA }}>¿Cómo funciona?</h2>
+          <h2 className="font-display text-xl font-bold mb-7 text-center" style={{ color: TINTA }}>¿Cómo funciona?</h2>
           <div className="grid grid-cols-3 gap-4 max-w-2xl mx-auto">
             {[
               { n: '1', emoji: '📸', color: VERDE, title: 'Publica', desc: 'Sube fotos y precio en 2 minutos. Sin costo.' },
@@ -300,7 +300,7 @@ export default function LandingPage({ listings, categories, searchParams }: Prop
 
       {/* ── POR QUÉ RESUELVE ── */}
       <section className="py-12 px-4 sm:px-6 max-w-7xl mx-auto">
-        <h2 className="text-xl font-black mb-6 text-center" style={{ color: TINTA }}>Por qué elegirnos</h2>
+        <h2 className="font-display text-xl font-bold mb-6 text-center" style={{ color: TINTA }}>Por qué elegirnos</h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {[
             { icon: <Zap className="w-5 h-5" style={{ color: CORAL }} />, bg: '#FDEEE9', title: 'Rápido y simple', desc: 'Publica en menos de 2 minutos desde tu teléfono.' },
@@ -323,7 +323,7 @@ export default function LandingPage({ listings, categories, searchParams }: Prop
       {/* ── TESTIMONIOS ── */}
       <section className="py-10 bg-white border-t border-black/8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <h2 className="text-xl font-black mb-6 text-center" style={{ color: TINTA }}>Lo que dice la comunidad</h2>
+          <h2 className="font-display text-xl font-bold mb-6 text-center" style={{ color: TINTA }}>Lo que dice la comunidad</h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {[
               { name: 'María G.', city: 'Caracas', text: 'Vendí ropa que tenía guardada hace años. En un día tenía 3 compradores. Increíble.' },
@@ -349,7 +349,7 @@ export default function LandingPage({ listings, categories, searchParams }: Prop
       <section className="py-16 border-t border-black/8" style={{ backgroundColor: PAPEL }}>
         <div className="max-w-md mx-auto px-4 text-center">
           <span className="text-3xl mb-4 block">🇻🇪</span>
-          <h2 className="text-2xl sm:text-3xl font-black mb-2 leading-tight" style={{ color: TINTA }}>
+          <h2 className="font-display text-2xl sm:text-3xl font-bold mb-2 leading-tight" style={{ color: TINTA }}>
             Empieza hoy.<br />
             <span style={{ color: VERDE }}>Es gratis, siempre.</span>
           </h2>
@@ -376,7 +376,7 @@ export default function LandingPage({ listings, categories, searchParams }: Prop
       {/* ── FOOTER ── */}
       <footer className="border-t border-black/8 py-6 mb-16 sm:mb-0" style={{ backgroundColor: '#E8E4DC' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <span className="font-black text-sm" style={{ color: TINTA }}>
+          <span className="font-display font-bold text-sm" style={{ color: TINTA }}>
             resuel<span style={{ color: CORAL }}>✓</span>e
           </span>
           <p className="text-xs" style={{ color: '#B0A89E' }}>entrayresuelve.com · Hecho con ❤️ para Venezuela · 2026</p>

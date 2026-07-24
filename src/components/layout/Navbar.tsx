@@ -63,7 +63,7 @@ export default function Navbar() {
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-black/8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center gap-3">
         {/* Logo */}
-        <Link href="/feed" className="font-black text-lg shrink-0 tracking-tight" style={{ color: TINTA }}>
+        <Link href="/feed" className="font-display font-bold text-lg shrink-0 tracking-tight" style={{ color: TINTA }}>
           resuel<span style={{ color: CORAL }}>✓</span>e
         </Link>
 
