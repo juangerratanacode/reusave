@@ -346,27 +346,20 @@ export default function LandingPage({ listings, categories, searchParams }: Prop
       </section>
 
       {/* ── CTA FINAL con imagen de fondo ── */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
       <section style={{ position: 'relative', height: '320px', overflow: 'hidden' }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/seccion-vende.jpg"
+          src="/seccion-vende.png"
           alt=""
-          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }}
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }}
         />
-        <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.50)' }} />
-        <div style={{ position: 'relative', zIndex: 10, height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '0 24px', textAlign: 'center' }}>
-          <h2 className="font-display" style={{ fontSize: '1.5rem', fontWeight: 700, color: 'white', marginBottom: '12px', lineHeight: 1.3 }}>
-            ¿Tienes algo que ya no usas?
-          </h2>
-          <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.80)', marginBottom: '24px', maxWidth: '360px' }}>
-            Publícalo gratis. Sin comisiones. En menos de 2 minutos desde tu teléfono.
-          </p>
-          <Link
-            href="/auth/signup"
-            style={{ backgroundColor: CORAL, color: 'white', fontWeight: 700, padding: '14px 28px', borderRadius: '12px', textDecoration: 'none', display: 'inline-block' }}
-          >
+        <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.48)' }} />
+        <div style={{ position: 'relative', zIndex: 10, height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '0 24px', textAlign: 'center', gap: '12px' }}>
+          <h2 style={{ color: 'white', fontSize: '1.75rem', fontWeight: 900, lineHeight: 1.2, margin: 0 }}>¿Tienes algo que ya no usas?</h2>
+          <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '0.95rem', margin: 0 }}>Publícalo gratis. Sin comisiones. En menos de 2 minutos desde tu teléfono.</p>
+          <a href="/auth/signup" style={{ backgroundColor: '#FF5A38', color: 'white', fontWeight: 700, padding: '12px 28px', borderRadius: '12px', textDecoration: 'none', fontSize: '1rem' }}>
             Publicar gratis →
-          </Link>
+          </a>
         </div>
       </section>
 
