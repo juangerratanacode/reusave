@@ -346,34 +346,27 @@ export default function LandingPage({ listings, categories, searchParams }: Prop
       </section>
 
       {/* ── CTA FINAL con imagen de fondo ── */}
-      <section className="relative overflow-hidden border-t border-black/8">
+      <section className="relative h-64 sm:h-80 overflow-hidden flex items-center justify-center">
         <img
-          src="/seccion-vende.png"
+          src="/seccion-vende.jpg"
           alt=""
           className="absolute inset-0 w-full h-full object-cover object-center"
         />
-        <div className="absolute inset-0" style={{ backgroundColor: 'rgba(0,0,0,0.50)' }} />
-        <div className="relative max-w-md mx-auto px-4 py-20 text-center">
-          <span className="text-3xl mb-4 block">🇻🇪</span>
-          <h2 className="font-display text-2xl sm:text-3xl font-bold mb-2 leading-tight text-white">
+        <div className="absolute inset-0 bg-black/50" />
+        <div className="relative text-center px-6 max-w-md mx-auto">
+          <h2 className="font-display text-2xl font-bold text-white mb-3 leading-tight">
             ¿Tienes algo que ya no usas?
           </h2>
-          <p className="text-sm mb-7 mt-2 text-white/75">Publícalo gratis. Sin comisiones. En menos de 2 minutos.</p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
-            <Link
-              href="/auth/signup"
-              className="text-white font-bold px-7 py-3.5 rounded-xl hover:opacity-90 transition-opacity flex items-center gap-2 w-full sm:w-auto justify-center"
-              style={{ backgroundColor: CORAL }}
-            >
-              Publicar gratis <ArrowRight className="w-4 h-4" />
-            </Link>
-            <Link
-              href="/auth/login"
-              className="font-bold px-7 py-3.5 rounded-xl border border-white/40 text-white hover:bg-white/10 transition-colors w-full sm:w-auto text-center"
-            >
-              Ya tengo cuenta
-            </Link>
-          </div>
+          <p className="text-sm text-white/80 mb-6">
+            Publícalo gratis. Sin comisiones. En menos de 2 minutos desde tu teléfono.
+          </p>
+          <Link
+            href="/auth/signup"
+            className="inline-flex items-center gap-2 text-white font-bold px-7 py-3.5 rounded-xl hover:opacity-90 transition-opacity"
+            style={{ backgroundColor: CORAL }}
+          >
+            Publicar gratis →
+          </Link>
         </div>
       </section>
 
