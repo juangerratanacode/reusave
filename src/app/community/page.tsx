@@ -51,15 +51,17 @@ export default async function CommunityPage() {
       <main className="pt-14 pb-28">
 
         {/* ── HERO ── */}
-        <section className="relative overflow-hidden" style={{ backgroundColor: VERDE }}>
-          {/* Decoración de fondo */}
-          <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            <div className="absolute -top-20 -right-20 w-72 h-72 rounded-full opacity-10" style={{ backgroundColor: 'white' }} />
-            <div className="absolute -bottom-12 -left-12 w-56 h-56 rounded-full opacity-10" style={{ backgroundColor: 'white' }} />
-            <div className="absolute top-1/2 left-1/3 w-32 h-32 rounded-full opacity-5" style={{ backgroundColor: 'white' }} />
-          </div>
+        <section className="relative overflow-hidden h-72 sm:h-96 lg:h-[480px]" style={{ backgroundColor: VERDE }}>
+          {/* Imagen de fondo */}
+          <img
+            src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1400&q=80"
+            alt="Comunidad Resuelve"
+            className="absolute inset-0 w-full h-full object-cover object-center"
+          />
+          {/* Overlay verde */}
+          <div className="absolute inset-0" style={{ backgroundColor: 'rgba(15,164,106,0.75)' }} />
 
-          <div className="relative max-w-3xl mx-auto px-5 py-16 sm:py-24 text-center">
+          <div className="relative max-w-3xl mx-auto px-5 py-16 sm:py-24 text-center h-full flex flex-col items-center justify-center">
             <span className="inline-block text-white/70 text-sm font-semibold uppercase tracking-widest mb-4">Sobre nosotros</span>
             <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight mb-5">
               Somos tu comunidad,<br />

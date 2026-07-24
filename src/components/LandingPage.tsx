@@ -373,17 +373,33 @@ export default function LandingPage({ listings, categories, searchParams }: Prop
         </div>
       </section>
 
+      {/* ── IMAGEN COMUNIDAD ── */}
+      <section className="relative h-64 sm:h-80 lg:h-96 overflow-hidden">
+        <img
+          src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1400&q=80"
+          alt="Comunidad Resuelve"
+          className="w-full h-full object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col items-center justify-end pb-8 text-center px-4">
+          <h2 className="font-display text-white text-2xl sm:text-3xl font-bold mb-2">Hecho para Venezuela 🇻🇪</h2>
+          <p className="text-white/80 text-sm sm:text-base">Conectamos a quienes tienen con quienes necesitan</p>
+        </div>
+      </section>
+
       {/* ── FOOTER ── */}
       <footer className="border-t border-black/8 py-6 mb-16 sm:mb-0" style={{ backgroundColor: '#E8E4DC' }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-2">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <span className="font-display font-bold text-sm" style={{ color: TINTA }}>
             resuel<span style={{ color: CORAL }}>✓</span>e
           </span>
-          <div className="flex items-center gap-3">
-            <Link href="/community" className="text-xs hover:underline" style={{ color: '#B0A89E' }}>Comunidad</Link>
-            <span style={{ color: '#D4CFC7' }}>·</span>
-            <p className="text-xs" style={{ color: '#B0A89E' }}>entrayresuelve.com · Hecho con ❤️ para Venezuela · 2026</p>
-          </div>
+          <nav className="flex items-center gap-5">
+            <Link href="/community" className="text-xs font-medium hover:underline transition-colors" style={{ color: '#6B7280' }}>Comunidad</Link>
+            <Link href="/community#como-funciona" className="text-xs font-medium hover:underline transition-colors" style={{ color: '#6B7280' }}>Cómo funciona</Link>
+            <Link href="/listings/new" className="text-xs font-medium hover:underline transition-colors" style={{ color: CORAL }}>Publicar gratis</Link>
+          </nav>
+          <p className="text-xs text-center sm:text-right" style={{ color: '#B0A89E' }}>
+            entrayresuelve.com · Hecho con ❤️ para Venezuela · 2026
+          </p>
         </div>
       </footer>
 
